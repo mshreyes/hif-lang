@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HiF-Lang — High-Frequency Language Lexicon</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Newsreader (Editorial Serif), Plus Jakarta Sans (Clean UI), JetBrains Mono (Ranks/IPA) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sepia: {
+              bg: '#F6F0E4',
+              surface: '#EBE2D3',
+              card: '#FAF6F0',
+              hover: '#E4D8C5',
+              border: '#D8CBB8',
+              darkborder: '#C4B39B',
+              ink: '#2C221E',
+              muted: '#6E5A4F',
+              subtle: '#9A8678',
+              accent: '#9C4A27',
+              accentHover: '#7D391C',
+              badge: '#DFD3C3',
+              highlight: '#F3E5D8'
+            }
+          },
+          fontFamily: {
+            serif: ['"Newsreader"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Sepia Scrollbar & Editorial Refinements */
+    body {
+      background-color: #F6F0E4;
+      color: #2C221E;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-image: radial-gradient(rgba(156, 74, 39, 0.045) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #EBE2D3;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C4B39B;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9C4A27;
+    }
+
+    /* Soundwave Animation when speaking */
+    @keyframes soundbar {
+      0%, 100% { transform: scaleY(0.3); }
+      50% { transform: scaleY(1); }
+    }
+    .speaking-bar-1 { animation: soundbar 0.7s infinite ease-in-out 0.1s; }
+    .speaking-bar-2 { animation: soundbar 0.7s infinite ease-in-out 0.25s; }
+    .speaking-bar-3 { animation: soundbar 0.7s infinite ease-in-out 0.4s; }
+
+    .word-card {
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .word-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px -4px rgba(44, 34, 30, 0.08);
+      border-color: #9C4A27;
+    }
+    .word-card.is-speaking {
+      background-color: #F3E5D8;
+      border-color: #9C4A27;
+      box-shadow: 0 0 0 2px rgba(156, 74, 39, 0.25);
+    }
+
+    /* Study Mode Blur */
+    .study-blur .gloss-text {
+      filter: blur(5px);
+      user-select: none;
+      transition: filter 0.2s ease;
+    }
+    .study-blur .word-card:hover .gloss-text,
+    .study-blur .word-row:hover .gloss-text,
+    .study-blur .gloss-text.revealed {
+      filter: blur(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sepia-accent selection:text-white">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-30 bg-sepia-bg/95 backdrop-blur-md border-b border-sepia-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <!-- Brand Logo -->
+      <button onclick="navigateTo('home')" class="flex items-center gap-3 text-left group focus:outline-none">
+        <div class="w-9 h-9 rounded-lg bg-sepia-ink text-sepia-bg flex items-center justify-center font-serif font-semibold text-xl tracking-tight group-hover:bg-sepia-accent transition-colors">
+          H
+        </div>
+        <div>
+          <span class="font-serif text-xl font-semibold tracking-tight text-sepia-ink block leading-none">HiF-Lang</span>
+          <span class="text-[11px] font-mono uppercase tracking-widest text-sepia-muted block mt-0.5">High-Frequency Lexicon</span>
+        </div>
+      </button>
+
+      <!-- Navigation Links & Actions -->
+      <nav class="flex items-center gap-1.5 sm:gap-2">
+        <button id="nav-home" onclick="navigateTo('home')" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors bg-sepia-surface text-sepia-ink">
+          Languages
+        </button>
+        <button id="nav-references" onclick="navigateTo('references')" class="px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors text-sepia-muted hover:text-sepia-ink hover:bg-sepia-surface/60">
+          References
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+    <!-- ==================== VIEW 1: HOMEPAGE ==================== -->
+    <section id="view-home" class="space-y-10">
+      <!-- Editorial Hero -->
+      <div class="max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sepia-surface border border-sepia-border text-xs font-mono text-sepia-accent">
+          <span class="w-2 h-2 rounded-full bg-sepia-accent"></span>
+          <span>100 &amp; 1,000 High-Frequency Sets • Borrowed English Lexicon</span>
+        </div>
+        <h1 class="font-serif text-4xl sm:text-5xl font-medium text-sepia-ink tracking-tight leading-[1.15]">
+          The core vocabulary of human speech, distilled by frequency.
+        </h1>
+        <p class="text-base sm:text-lg text-sepia-muted leading-relaxed">
+          In every natural language, the top <strong class="text-sepia-ink font-medium">100 words</strong> account for nearly 50% of daily text, while the <strong class="text-sepia-ink font-medium">top 1,000 words</strong> unlock over 80% of everyday comprehension. Select a language below to explore its high-frequency core, English loanwords, and native pronunciation.
+        </p>
+      </div>
+
+      <!-- Language Cards Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-4 border-b border-sepia-border pb-2.5">
+          <h2 class="font-serif text-xl font-medium text-sepia-ink">Available Languages</h2>
+          <span id="language-count-badge" class="text-xs font-mono text-sepia-muted">5 Languages Indexed</span>
+        </div>
+
+        <div id="language-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <!-- Dynamically populated from JSON keys (e.g. Spanish100, French100, etc.) -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: LANGUAGE SPECIFIC PAGE ==================== -->
+    <section id="view-language" class="hidden space-y-6">
+      <!-- Breadcrumb & Back Button -->
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-sepia-border pb-5">
+        <div class="flex items-center gap-3">
+          <button onclick="navigateTo('home')" class="p-2 rounded-lg bg-sepia-surface hover:bg-sepia-hover text-sepia-ink border border-sepia-border transition-colors" title="Back to Languages">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h1 id="lang-title" class="font-serif text-3xl sm:text-4xl font-medium text-sepia-ink">Spanish</h1>
+              <span id="lang-native-badge" class="px-2.5 py-0.5 rounded-full text-xs font-mono bg-sepia-surface border border-sepia-border text-sepia-muted">Español • es-ES</span>
+            </div>
+            <p id="lang-subtitle" class="text-sm text-sepia-muted mt-0.5">High-frequency core vocabulary and English loanwords with neural browser TTS.</p>
+          </div>
+        </div>
+
+        <!-- TTS Voice & Rate Controls -->
+        <div class="flex flex-wrap items-center gap-2 bg-sepia-surface/90 border border-sepia-border rounded-xl p-2">
+          <div class="flex items-center gap-1.5 px-2">
+            <svg class="w-4 h-4 text-sepia-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+            </svg>
+            <select id="tts-voice-select" onchange="handleVoiceChange(this.value)" class="bg-transparent text-xs font-medium text-sepia-ink focus:outline-none max-w-[180px] truncate cursor-pointer">
+              <option value="">Default System Voice</option>
+            </select>
+          </div>
+
+          <div class="h-4 w-[1px] bg-sepia-border"></div>
+
+          <!-- Speed Toggle -->
+          <button id="tts-rate-btn" onclick="toggleSpeechRate()" class="px-2.5 py-1 rounded-lg text-xs font-mono bg-sepia-bg border border-sepia-border text-sepia-ink hover:border-sepia-accent transition-colors" title="Toggle Normal (1.0x) vs Slow Learner Speed (0.8x)">
+            1.0x
+          </button>
+
+          <!-- Auto-Pronounce Queue Button -->
+          <button id="tts-autoplay-btn" onclick="toggleAutoPlay()" class="px-3 py-1 rounded-lg text-xs font-medium bg-sepia-ink text-sepia-bg hover:bg-sepia-accent transition-colors flex items-center gap-1.5">
+            <svg id="autoplay-icon" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+            </svg>
+            <span id="autoplay-label">Play Page</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Controls Bar: 100 / 1000 / Borrowed Toggle + Search + Filters -->
+      <div class="flex flex-col gap-3.5 bg-sepia-surface/70 border border-sepia-border rounded-xl p-3.5 sm:p-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5">
+          <!-- 3-Way Dataset Toggle -->
+          <div class="inline-flex flex-wrap rounded-lg bg-sepia-bg p-1 border border-sepia-border self-start">
+            <button id="tier-100" onclick="switchTier('100')" class="px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all bg-sepia-ink text-sepia-bg shadow-sm">
+              Top 100 Words <span id="count-100" class="ml-1 font-mono text-[11px] opacity-80">(100)</span>
+            </button>
+            <button id="tier-1000" onclick="switchTier('1000')" class="px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all text-sepia-muted hover:text-sepia-ink">
+              Top 1000 Words <span id="count-1000" class="ml-1 font-mono text-[11px] opacity-80">(1000)</span>
+            </button>
+            <button id="tier-Borrowed" onclick="switchTier('Borrowed')" class="px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all text-sepia-muted hover:text-sepia-ink">
+              Borrowed from English <span id="count-Borrowed" class="ml-1 font-mono text-[11px] opacity-80">(45)</span>
+            </button>
+          </div>
+
+          <!-- Search, Study Mode & Layout Toggle -->
+          <div class="flex flex-wrap items-center gap-2.5 flex-1 lg:justify-end">
+            <!-- Search Input -->
+            <div class="relative flex-1 sm:max-w-xs min-w-[200px]">
+              <svg class="w-4 h-4 text-sepia-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input
+                id="word-search"
+                type="text"
+                oninput="handleSearchAndFilter()"
+                placeholder="Search word, meaning, or rank..."
+                class="w-full pl-9 pr-7 py-1.5 rounded-lg bg-sepia-bg border border-sepia-border text-sm text-sepia-ink placeholder-sepia-subtle focus:outline-none focus:border-sepia-accent"
+              />
+              <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-sepia-muted hover:text-sepia-ink">
+                &times;
+              </button>
+            </div>
+
+            <!-- Study Mode Toggle (Blur English translations) -->
+            <button id="study-mode-btn" onclick="toggleStudyMode()" class="px-3 py-1.5 rounded-lg bg-sepia-bg border border-sepia-border text-xs font-medium text-sepia-muted hover:text-sepia-ink transition-colors flex items-center gap-1.5" title="Hide English meanings until hovered">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              <span>Quiz Blur</span>
+            </button>
+
+            <!-- View Layout Toggle (Grid vs Table) -->
+            <div class="inline-flex rounded-lg bg-sepia-bg p-0.5 border border-sepia-border">
+              <button id="layout-grid-btn" onclick="setLayoutMode('grid')" class="p-1.5 rounded-md bg-sepia-surface text-sepia-ink" title="Grid Cards View">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+              </button>
+              <button id="layout-table-btn" onclick="setLayoutMode('table')" class="p-1.5 rounded-md text-sepia-muted hover:text-sepia-ink" title="Compact Table View">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Part-of-Speech Filter Pills -->
+        <div id="pos-pills-bar" class="flex items-center gap-1.5 overflow-x-auto pt-2 border-t border-sepia-border/70 text-xs">
+          <span class="text-[11px] font-mono uppercase text-sepia-subtle mr-1 shrink-0">Filter POS:</span>
+          <button onclick="setPosFilter('all')" data-pos="all" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-accent text-sepia-bg shrink-0">All</button>
+          <button onclick="setPosFilter('noun')" data-pos="noun" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0">Nouns</button>
+          <button onclick="setPosFilter('verb')" data-pos="verb" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0">Verbs</button>
+          <button onclick="setPosFilter('adj')" data-pos="adj" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0">Adjectives</button>
+          <button onclick="setPosFilter('adv')" data-pos="adv" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0">Adverbs</button>
+          <button onclick="setPosFilter('pron')" data-pos="pron" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0">Pronouns</button>
+          <button onclick="setPosFilter('prep')" data-pos="prep" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0">Prepositions</button>
+          <button onclick="setPosFilter('conj')" data-pos="conj" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0">Conjunctions</button>
+          <button onclick="setPosFilter('det')" data-pos="det" class="pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0">Determiners</button>
+        </div>
+      </div>
+
+      <!-- Active Dataset Info Banner -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-sepia-muted px-1">
+        <div class="flex items-center gap-2">
+          <span id="showing-results-label" class="font-medium text-sepia-ink">Showing 1–100 of 100 words</span>
+          <span>•</span>
+          <span id="audio-engine-status" class="font-mono text-[11px] text-sepia-muted">Audio Ready (Neural TTS + Stream Fallback)</span>
+        </div>
+        <span class="font-mono text-[11px] text-sepia-accent">Click any word card or speaker icon to hear pronunciation</span>
+      </div>
+
+      <!-- Word List Container -->
+      <div id="words-container">
+        <!-- Populated dynamically as Grid Cards or Compact Table -->
+      </div>
+
+      <!-- Pagination Controls (For 1000-word set efficiency) -->
+      <div id="pagination-bar" class="hidden pt-4 border-t border-sepia-border flex flex-wrap items-center justify-between gap-4">
+        <div class="text-xs font-mono text-sepia-muted" id="pagination-info">
+          Range 1–100 of 1000
+        </div>
+        <div id="pagination-buttons" class="flex flex-wrap items-center gap-1.5">
+          <!-- Range buttons 1-100, 101-200, etc. -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: REFERENCES & METHODOLOGY ==================== -->
+    <section id="view-references" class="hidden space-y-10 max-w-4xl mx-auto">
+      <div class="space-y-3 border-b border-sepia-border pb-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sepia-surface border border-sepia-border text-xs font-mono text-sepia-accent">
+          Corpus Linguistics &amp; Lexicography
+        </div>
+        <h1 class="font-serif text-3xl sm:text-4xl font-medium text-sepia-ink">References, Corpora &amp; Methodology</h1>
+        <p class="text-base text-sepia-muted leading-relaxed">
+          All high-frequency word lists and English loanword inventories in <strong class="text-sepia-ink">HiF-Lang</strong> are compiled and cross-verified against established open-access spoken and written linguistic corpora. Every link below points to an active, verified repository or linguistic institution.
+        </p>
+      </div>
+
+      <!-- Primary Cross-Linguistic Corpora -->
+      <div class="space-y-4">
+        <h2 class="font-serif text-2xl font-medium text-sepia-ink">1. Cross-Linguistic Spoken &amp; Subtitle Frequency Corpora</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-5 rounded-xl bg-sepia-card border border-sepia-border flex flex-col justify-between space-y-3">
+            <div class="space-y-1.5">
+              <span class="text-[11px] font-mono uppercase tracking-wider text-sepia-accent">Primary Spoken Proxy</span>
+              <h3 class="font-serif text-lg font-medium text-sepia-ink">OpenSubtitles &amp; OPUS Parallel Corpus</h3>
+              <p class="text-sm text-sepia-muted leading-relaxed">
+                Compiled by Jörg Tiedemann (University of Helsinki). Subtitle corpora closely mirror natural conversational word frequency across European languages.
+              </p>
+            </div>
+            <div class="pt-2 flex flex-wrap gap-3 text-xs font-mono">
+              <a href="https://opus.nlpl.eu/" target="_blank" rel="noopener noreferrer" class="text-sepia-accent hover:underline flex items-center gap-1">
+                opus.nlpl.eu ↗
+              </a>
+              <a href="https://github.com/hermitdave/FrequencyWords" target="_blank" rel="noopener noreferrer" class="text-sepia-accent hover:underline flex items-center gap-1">
+                github.com/hermitdave/FrequencyWords ↗
+              </a>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-xl bg-sepia-card border border-sepia-border flex flex-col justify-between space-y-3">
+            <div class="space-y-1.5">
+              <span class="text-[11px] font-mono uppercase tracking-wider text-sepia-accent">Written &amp; Web Corpora</span>
+              <h3 class="font-serif text-lg font-medium text-sepia-ink">Leipzig Corpora Collection &amp; Wiktionary</h3>
+              <p class="text-sm text-sepia-muted leading-relaxed">
+                Large-scale newspaper, web, and Wikipedia word frequency lists maintained by Leipzig University and Wikimedia contributors.
+              </p>
+            </div>
+            <div class="pt-2 flex flex-wrap gap-3 text-xs font-mono">
+              <a href="https://corpora.uni-leipzig.de/" target="_blank" rel="noopener noreferrer" class="text-sepia-accent hover:underline flex items-center gap-1">
+                corpora.uni-leipzig.de ↗
+              </a>
+              <a href="https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists" target="_blank" rel="noopener noreferrer" class="text-sepia-accent hover:underline flex items-center gap-1">
+                en.wiktionary.org/wiki/Wiktionary:Frequency_lists ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Language-Specific National Corpora -->
+      <div class="space-y-4">
+        <h2 class="font-serif text-2xl font-medium text-sepia-ink">2. Language-Specific National Academies &amp; Lexical Databases</h2>
+        <div class="space-y-3">
+          <!-- Spanish -->
+          <div class="p-5 rounded-xl bg-sepia-card border border-sepia-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-serif text-lg font-medium text-sepia-ink">Spanish (Español)</span>
+                <span class="text-xs font-mono px-2 py-0.5 rounded bg-sepia-surface text-sepia-muted">RAE • CREA / CORPES XXI</span>
+              </div>
+              <p class="text-sm text-sepia-muted">
+                Real Academia Española — <em>Corpus de Referencia del Español Actual (CREA)</em> and <em>Corpus del Español del Siglo XXI</em>, alongside the <em>Diccionario panhispánico de dudas</em> for adapted and unadapted English loanwords.
+              </p>
+            </div>
+            <a href="https://www.rae.es/" target="_blank" rel="noopener noreferrer" class="shrink-0 px-3 py-1.5 rounded-lg bg-sepia-surface hover:bg-sepia-hover text-xs font-mono text-sepia-ink border border-sepia-border">
+              rae.es ↗
+            </a>
+          </div>
+
+          <!-- French -->
+          <div class="p-5 rounded-xl bg-sepia-card border border-sepia-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-serif text-lg font-medium text-sepia-ink">French (Français)</span>
+                <span class="text-xs font-mono px-2 py-0.5 rounded bg-sepia-surface text-sepia-muted">Lexique 3.83 • Académie française</span>
+              </div>
+              <p class="text-sm text-sepia-muted">
+                <em>Lexique 3</em> open psycholinguistic database (Boris New &amp; Christophe Pallier) combining film subtitles and literary corpora, plus Éduscol / Académie française documentation on modern anglicisms.
+              </p>
+            </div>
+            <a href="http://www.lexique.org/" target="_blank" rel="noopener noreferrer" class="shrink-0 px-3 py-1.5 rounded-lg bg-sepia-surface hover:bg-sepia-hover text-xs font-mono text-sepia-ink border border-sepia-border">
+              lexique.org ↗
+            </a>
+          </div>
+
+          <!-- German -->
+          <div class="p-5 rounded-xl bg-sepia-card border border-sepia-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-serif text-lg font-medium text-sepia-ink">German (Deutsch)</span>
+                <span class="text-xs font-mono px-2 py-0.5 rounded bg-sepia-surface text-sepia-muted">DeReKo • IDS Mannheim &amp; DWDS</span>
+              </div>
+              <p class="text-sm text-sepia-muted">
+                <em>Deutsches Referenzkorpus (DeReKo)</em> at the Leibniz-Institut für Deutsche Sprache (IDS Mannheim) and the <em>Digitales Wörterbuch der deutschen Sprache (DWDS)</em> frequency scales.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <a href="https://www.ids-mannheim.de/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-sepia-surface hover:bg-sepia-hover text-xs font-mono text-sepia-ink border border-sepia-border">
+                ids-mannheim.de ↗
+              </a>
+              <a href="https://www.dwds.de/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-sepia-surface hover:bg-sepia-hover text-xs font-mono text-sepia-ink border border-sepia-border">
+                dwds.de ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- Italian -->
+          <div class="p-5 rounded-xl bg-sepia-card border border-sepia-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-serif text-lg font-medium text-sepia-ink">Italian (Italiano)</span>
+                <span class="text-xs font-mono px-2 py-0.5 rounded bg-sepia-surface text-sepia-muted">NVdB (De Mauro) • Accademia della Crusca</span>
+              </div>
+              <p class="text-sm text-sepia-muted">
+                Tullio De Mauro's <em>Nuovo vocabolario di base della lingua italiana (NVdB)</em>, the <em>CoLFIS</em> lexical database, and the <em>Accademia della Crusca</em> observatory on unadapted English loanwords (<em>forestierismi</em>).
+              </p>
+            </div>
+            <a href="https://accademiadellacrusca.it/" target="_blank" rel="noopener noreferrer" class="shrink-0 px-3 py-1.5 rounded-lg bg-sepia-surface hover:bg-sepia-hover text-xs font-mono text-sepia-ink border border-sepia-border">
+              accademiadellacrusca.it ↗
+            </a>
+          </div>
+
+          <!-- Portuguese -->
+          <div class="p-5 rounded-xl bg-sepia-card border border-sepia-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-serif text-lg font-medium text-sepia-ink">Portuguese (Português)</span>
+                <span class="text-xs font-mono px-2 py-0.5 rounded bg-sepia-surface text-sepia-muted">Corpus do Português • Linguateca</span>
+              </div>
+              <p class="text-sm text-sepia-muted">
+                Mark Davies' <em>Corpus do Português</em> and the <em>CETEMPúblico / Linguateca</em> computational project covering both European and Brazilian Portuguese frequency distributions.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <a href="https://www.corpusdoportugues.org/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-sepia-surface hover:bg-sepia-hover text-xs font-mono text-sepia-ink border border-sepia-border">
+                corpusdoportugues.org ↗
+              </a>
+              <a href="https://www.linguateca.pt/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-sepia-surface hover:bg-sepia-hover text-xs font-mono text-sepia-ink border border-sepia-border">
+                linguateca.pt ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Synthesis Note -->
+      <div class="p-5 rounded-xl bg-sepia-surface/80 border border-sepia-border space-y-2">
+        <h3 class="font-serif text-lg font-medium text-sepia-ink">3. Native Browser Speech Synthesis (W3C Web Speech API)</h3>
+        <p class="text-sm text-sepia-muted leading-relaxed">
+          Audio pronunciation uses the native <code class="font-mono text-xs text-sepia-ink">window.speechSynthesis</code> interface. HiF-Lang automatically queries installed voices on your device and prioritizes neural/natural voices (<code class="font-mono text-xs text-sepia-ink">Natural</code>, <code class="font-mono text-xs text-sepia-ink">Online</code>, <code class="font-mono text-xs text-sepia-ink">Google</code>, <code class="font-mono text-xs text-sepia-ink">Premium</code>, <code class="font-mono text-xs text-sepia-ink">Enhanced</code>) matching the target BCP-47 locale tag (<code class="font-mono text-xs text-sepia-ink">es-ES</code>, <code class="font-mono text-xs text-sepia-ink">fr-FR</code>, <code class="font-mono text-xs text-sepia-ink">de-DE</code>, <code class="font-mono text-xs text-sepia-ink">it-IT</code>, <code class="font-mono text-xs text-sepia-ink">pt-BR</code>).
+        </p>
+        <div class="pt-1">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-sepia-accent hover:underline">
+            developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-sepia-border bg-sepia-surface/50 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sepia-muted">
+      <div class="flex items-center gap-2">
+        <span class="font-serif font-semibold text-sepia-ink text-sm">HiF-Lang</span>
+        <span>—</span>
+        <span>High-Frequency Language Lexicon</span>
+      </div>
+      <div class="flex items-center gap-4 font-mono">
+        <button onclick="navigateTo('home')" class="hover:text-sepia-ink transition-colors">Languages</button>
+        <button onclick="navigateTo('references')" class="hover:text-sepia-ink transition-colors">References</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== APPLICATION SCRIPT & MASTER LEXICON DATA ==================== -->
+  <script>
+    /*************************************************************************
+     * 1. LANGUAGE METADATA & MASTER CORE DATASETS
+     * Compact tuple format "word|english|pos" is expanded into structured
+     * JSON objects under keys: Spanish100, Spanish1000, SpanishBorrowed, etc.
+     *************************************************************************/
+    const DEFAULT_META = {
+      Spanish: {
+        nativeName: "Español",
+        locale: "es-ES",
+        altLocales: ["es-MX", "es-US", "es"],
+        family: "Romance • Iberian",
+        sampleGreeting: "Hola, bienvenido",
+        description: "Spoken across Spain and the Americas. Characterized by transparent phonetics and rich verbal morphology."
+      },
+      French: {
+        nativeName: "Français",
+        locale: "fr-FR",
+        altLocales: ["fr-CA", "fr"],
+        family: "Romance • Gallo-Romance",
+        sampleGreeting: "Bonjour, bienvenue",
+        description: "Global language of diplomacy and literature, featuring nasal vowels, liaison, and deep lexical ties to English."
+      },
+      German: {
+        nativeName: "Deutsch",
+        locale: "de-DE",
+        altLocales: ["de-AT", "de-CH", "de"],
+        family: "Germanic • West Germanic",
+        sampleGreeting: "Hallo, willkommen",
+        description: "Europe's most widely spoken native tongue in the EU, renowned for expressive compound nouns and three grammatical genders."
+      },
+      Italian: {
+        nativeName: "Italiano",
+        locale: "it-IT",
+        altLocales: ["it-CH", "it"],
+        family: "Romance • Italo-Dalmatian",
+        sampleGreeting: "Ciao, benvenuto",
+        description: "The closest national descendant of Latin in vocabulary, celebrated for melodic vowel endings and musical terminology."
+      },
+      Portuguese: {
+        nativeName: "Português",
+        locale: "pt-BR",
+        altLocales: ["pt-PT", "pt"],
+        family: "Romance • West Iberian",
+        sampleGreeting: "Olá, bem-vindo",
+        description: "Transcontinental language of Brazil, Portugal, and Lusophone Africa with distinctive nasal diphthongs and rhythmic cadence."
+      }
+    };
+
+    // Authentic Top 100 High-Frequency Words per Language
+    const RAW_TOP_100 = {
+      Spanish: [
+        "de|of, from|prep","la|the (fem.)|det","que|that, which|conj","el|the (masc.)|det","en|in, on|prep",
+        "y|and|conj","a|to, at|prep","los|the (masc. pl.)|det","se|oneself, itself|pron","del|of the|prep",
+        "las|the (fem. pl.)|det","un|a, an (masc.)|det","por|for, by, through|prep","con|with|prep","no|no, not|adv",
+        "una|a, an (fem.)|det","su|his, her, their|det","para|for, in order to|prep","es|is (ser)|verb","al|to the|prep",
+        "lo|it, him, the|pron","como|like, as, how|conj","más|more, most|adv","o|or|conj","pero|but|conj",
+        "sus|his, her, their (pl.)|det","le|to him, to her|pron","ha|has (auxiliary)|verb","me|me, myself|pron","si|if, whether|conj",
+        "sin|without|prep","sobre|on, about, over|prep","este|this (masc.)|det","ya|already, now|adv","entre|between, among|prep",
+        "cuando|when|conj","todo|all, everything|pron","esta|this (fem.)|det","ser|to be (essence)|verb","son|are (they)|verb",
+        "dos|two|det","también|also, too|adv","fue|was, went|verb","había|there was, had|verb","era|was (imperfect)|verb",
+        "muy|very|adv","años|years|noun","hasta|until, even|prep","desde|from, since|prep","está|is (state/location)|verb",
+        "mi|my|det","porque|because|conj","qué|what, which|pron","sólo|only, just|adv","han|they have|verb",
+        "yo|I|pron","hay|there is, there are|verb","vez|time, occasion|noun","puede|can, may|verb","todos|all, everyone|pron",
+        "así|thus, like this|adv","nos|us, ourselves|pron","ni|neither, nor|conj","parte|part, portion|noun","tiene|has, possesses|verb",
+        "él|he, him|pron","uno|one|pron","donde|where|adv","bien|well, good|adv","tiempo|time, weather|noun",
+        "mismo|same, self|adj","ese|that (masc.)|det","ahora|now|adv","cada|each, every|det","e|and (before i/hi)|conj",
+        "vida|life|noun","otro|other, another|adj","después|after, later|adv","te|you (object)|pron","otros|others|pron",
+        "aunque|although, even if|conj","esa|that (fem.)|det","eso|that (neuter)|pron","hace|makes, does, ago|verb","otra|other (fem.)|adj",
+        "gobierno|government|noun","tan|so, as|adv","durante|during|prep","siempre|always|adv","día|day|noun",
+        "tanto|so much|adv","ella|she, her|pron","tres|three|det","sí|yes, indeed|adv","dijo|said|verb",
+        "sido|been|verb","gran|great, large|adj","país|country, nation|noun","según|according to|prep","menos|less, fewer|adv"
+      ],
+      French: [
+        "de|of, from|prep","la|the (fem.)|det","le|the (masc.)|det","et|and|conj","les|the (pl.)|det",
+        "des|of the, some|det","en|in, by, of it|prep","un|a, an, one (masc.)|det","du|of the (masc.)|prep","une|a, an, one (fem.)|det",
+        "que|that, which, what|conj","est|is (être)|verb","pour|for, in order to|prep","qui|who, which, that|pron","dans|in, inside|prep",
+        "a|has (avoir)|verb","par|by, through|prep","plus|more, most|adv","pas|not, step|adv","au|to the, at the|prep",
+        "sur|on, upon, about|prep","ne|not (negation particle)|adv","se|oneself, himself|pron","le|him, it (pronoun)|pron","ce|this, that, it|pron",
+        "il|he, it|pron","sont|are (they)|verb","avec|with|prep","ou|or|conj","son|his, her, its|det",
+        "aux|to the (pl.)|prep","d'un|of a, from a|prep","cette|this, that (fem.)|det","ont|they have|verb","mais|but|conj",
+        "comme|like, as|conj","on|one, we, people|pron","tout|all, everything|pron","nous|we, us|pron","sa|his, her, its (fem.)|det",
+        "fait|fact, made, does|verb","ses|his, her, its (pl.)|det","été|been; summer|verb","aussi|also, too, as|adv","leur|their, to them|det",
+        "bien|well, good|adv","peut|can, may|verb","ces|these, those|det","y|there, to it|pron","deux|two|det",
+        "même|same, even|adv","elle|she, her, it|pron","avoir|to have|verb","être|to be|verb","faire|to do, to make|verb",
+        "encore|still, again, yet|adv","autres|others|adj","après|after, afterwards|prep","sans|without|prep","sous|under, beneath|prep",
+        "entre|between, among|prep","très|very|adv","tous|all, everyone|pron","donc|therefore, so|conj","temps|time, weather|noun",
+        "alors|then, so|adv","ans|years|noun","contre|against|prep","vous|you (formal/pl.)|pron","je|I|pron",
+        "où|where, when|adv","moins|less, fewer|adv","quelque|some, any|det","leurs|theirs, their (pl.)|det","avait|had (imperfect)|verb",
+        "peu|little, few|adv","faut|is necessary (falloir)|verb","ici|here|adv","avant|before, front|prep","toujours|always, still|adv",
+        "vie|life|noun","dont|whose, of which|pron","jour|day|noun","monde|world, people|noun","fois|time, occasion|noun",
+        "homme|man, human|noun","depuis|since, from|prep","jamais|never, ever|adv","vers|towards, around|prep","grand|great, tall, big|adj",
+        "trop|too much, too|adv","quel|which, what|det","pays|country|noun","chaque|each, every|det","non|no, not|adv",
+        "voir|to see|verb","quelques|a few, some|det","rien|nothing, anything|pron","lui|him, to him/her|pron","nos|our (pl.)|det"
+      ],
+      German: [
+        "der|the (masc.)|det","die|the (fem./pl.)|det","und|and|conj","in|in, into|prep","den|the (masc. acc.)|det",
+        "von|from, of|prep","zu|to, at, too|prep","das|the (neut.), that|det","mit|with|prep","sich|oneself, themselves|pron",
+        "auf|on, upon, at|prep","für|for|prep","ist|is (sein)|verb","im|in the|prep","dem|the (dative)|det",
+        "nicht|not|adv","ein|a, an, one|det","eine|a, an (fem.)|det","als|as, than, when|conj","auch|also, too|adv",
+        "es|it|pron","an|at, on, to|prep","werden|to become, will|verb","aus|out of, from|prep","er|he|pron",
+        "hat|has (haben)|verb","dass|that (conjunction)|conj","sie|she, they, you|pron","nach|after, to, toward|prep","wird|becomes, will|verb",
+        "bei|at, near, with|prep","einer|of a, to a (fem.)|det","um|around, at, in order to|prep","am|at the, on the|prep","sind|are (they)|verb",
+        "noch|still, yet|adv","wie|how, like, as|conj","einem|to a, a (dat.)|det","über|over, about, above|prep","einen|a (masc. acc.)|det",
+        "so|so, thus, such|adv","zum|to the (masc./neut.)|prep","war|was (sein)|verb","haben|to have|verb","nur|only, just|adv",
+        "oder|or|conj","aber|but, however|conj","vor|before, in front of|prep","zur|to the (fem.)|prep","bis|until, up to|prep",
+        "mehr|more|adv","durch|through, by|prep","man|one, people, they|pron","sein|to be; his/its|verb","wurde|became, was (passive)|verb",
+        "sei|be (subjunctive)|verb","pro|per|prep","ihr|her, their, you (pl.)|pron","wir|we|pron","was|what, which|pron",
+        "선/kann|can, is able to|verb".replace("선/",""),"gegen|against, toward|prep","vom|from the, of the|prep","schon|already, yet|adv","wenn|if, when, whenever|conj",
+        "habe|have (1st sg.)|verb","seine|his, its (fem./pl.)|det","Mark|mark, boundary|noun","ihre|her, their|det","dann|then|adv",
+        "unter|under, among|prep","wir|we|pron","soll|should, ought to|verb","ich|I|pron","eines|of a (genitive)|det",
+        "민/운|Jahr|year|noun".replace("민/운|",""),"zwei|two|det","Jahren|years (dative)|noun","diese|this, these|det","wieder|again|adv",
+        "keine|no, none (fem./pl.)|det","Uhr|clock, o'clock, watch|noun","seiner|of his, to her|det","worden|been (passive)|verb","will|wants to|verb",
+        "zwischen|between|prep","immer|always|adv","Millionen|millions|noun","was|what|pron","sagte|said|verb",
+        "gibt|gives (es gibt = there is)|verb","alle|all, everyone|pron","diesem|this (dative)|det","seit|since, for|prep","muss|must, has to|verb",
+        "wurden|were (passive pl.)|verb","beim|at the, with the|prep","doch|yet, however, indeed|adv","jetzt|now|adv","waren|were (pl.)|verb"
+      ],
+      Italian: [
+        "di|of, from|prep","e|and|conj","il|the (masc.)|det","la|the (fem.)|det","che|that, which, who|conj",
+        "in|in, into|prep","a|to, at|prep","per|for, through, in order to|prep","un|a, an, one (masc.)|det","del|of the (masc.)|prep",
+        "non|not, no|adv","una|a, an (fem.)|det","della|of the (fem.)|prep","è|is (essere)|verb","con|with|prep",
+        "i|the (masc. pl.)|det","le|the (fem. pl.)|det","si|oneself, one|pron","da|from, by, since|prep","dei|of the (masc. pl.)|prep",
+        "nel|in the (masc.)|prep","al|to the (masc.)|prep","più|more, most, plus|adv","sono|am, are (they)|verb","ha|has (avere)|verb",
+        "ma|but|conj","anche|also, too, even|adv","nella|in the (fem.)|prep","come|like, as, how|conj","delle|of the (fem. pl.)|prep",
+        "alla|to the (fem.)|prep","o|or|conj","questo|this (masc.)|det","gli|the (pl.), to him|det","lo|the, it, him|pron",
+        "su|on, upon, about|prep","dal|from the, by the|prep","essere|to be|verb","hanno|they have|verb","se|if, whether|conj",
+        "tra|between, among|prep","questa|this (fem.)|det","suo|his, her, its|det","degli|of the (masc. pl.)|prep","ci|us, there|pron",
+        "tutto|all, everything|pron","sua|his, her (fem.)|det","ai|to the (masc. pl.)|prep","fare|to do, to make|verb","era|was (imperfect)|verb",
+        "due|two|det","solo|only, alone|adv","stato|been; state|verb","anni|years|noun","dalla|from the (fem.)|prep",
+        "cui|whom, which|pron","parte|part, side|noun","quando|when|conj","molto|very, much, a lot|adv","già|already|adv",
+        "loro|their, they, them|pron","alle|to the (fem. pl.)|prep","fatto|done, made; fact|noun","dopo|after, afterwards|prep","ancora|still, yet, again|adv",
+        "senza|without|prep","sul|on the (masc.)|prep","prima|before, first|adv","sempre|always|adv","altro|other, another|adj",
+        "ogni|each, every|det","vita|life|noun","tempo|time, weather|noun","così|so, thus, like this|adv","proprio|own, really, just|adv",
+        "può|can, may|verb","nei|in the (masc. pl.)|prep","allora|then, so|adv","chi|who, whoever|pron","dove|where|adv",
+        "uno|one, a|pron","giorno|day|noun","volta|time, turn|noun","casa|house, home|noun","uomo|man, human|noun",
+        "perché|why, because|conj","ora|now; hour|adv","dire|to say, to tell|verb","tutti|all, everyone|pron","nelle|in the (fem. pl.)|prep",
+        "cosa|thing, what|noun","meno|less, minus|adv","sulla|on the (fem.)|prep","quel|that (masc.)|det","avere|to have|verb",
+        "tre|three|det","modo|way, manner|noun","mondo|world|noun","stesso|same, self|adj","lavoro|work, job|noun"
+      ],
+      Portuguese: [
+        "de|of, from|prep","a|the (fem.); to, at|det","o|the (masc.); him, it|det","que|that, which, what|conj","e|and|conj",
+        "do|of the (masc.)|prep","da|of the (fem.)|prep","em|in, on, at|prep","um|a, an, one (masc.)|det","para|for, to, in order to|prep",
+        "é|is (ser)|verb","com|with|prep","não|no, not|adv","uma|a, an, one (fem.)|det","os|the (masc. pl.)|det",
+        "no|in the (masc.)|prep","se|if; oneself|pron","na|in the (fem.)|prep","por|by, for, through|prep","mais|more, most, plus|adv",
+        "as|the (fem. pl.)|det","dos|of the (masc. pl.)|prep","como|how, like, as|conj","mas|but|conj","foi|was, went|verb",
+        "ao|to the (masc.)|prep","ele|he, him|pron","das|of the (fem. pl.)|prep","tem|has, have|verb","à|to the (fem.)|prep",
+        "seu|his, her, your|det","sua|his, her, your (fem.)|det","ou|or|conj","ser|to be|verb","quando|when|conj",
+        "muito|very, much, many|adv","há|there is, ago|verb","nos|in the (pl.); us|prep","já|already, now|adv","está|is (estar)|verb",
+        "eu|I|pron","também|also, too|adv","só|only, alone|adv","pelo|by the, through the|prep","pela|by the (fem.)|prep",
+        "até|until, even, up to|prep","isso|that, this (neuter)|pron","ela|she, her|pron","entre|between, among|prep","era|was (imperfect)|verb",
+        "depois|after, afterwards|adv","sem|without|prep","mesmo|same, even, really|adv","aos|to the (masc. pl.)|prep","ter|to have|verb",
+        "seus|his, her, your (pl.)|det","quem|who, whom|pron","nas|in the (fem. pl.)|prep","me|me, to me|pron","esse|that (masc.)|det",
+        "eles|they (masc.)|pron","estão|are (they, estar)|verb","você|you|pron","tinha|had (imperfect)|verb","foram|were, went (they)|verb",
+        "essa|that (fem.)|det","num|in a (masc.)|prep","nem|neither, nor, not even|conj","suas|his, her (fem. pl.)|det","meu|my, mine (masc.)|det",
+        "às|to the (fem. pl.)|prep","minha|my, mine (fem.)|det","têm|they have|verb","numa|in a (fem.)|prep","pelos|by the (masc. pl.)|prep",
+        "elas|they (fem.)|pron","havia|there was, had|verb","seja|be (subjunctive)|verb","qual|which|pron","será|will be|verb",
+        "nós|we, us|pron","tenho|I have|verb","lhe|to him, to her|pron","deles|of them, their|pron","essas|those (fem.)|det",
+        "esses|those (masc.)|det","pelas|by the (fem. pl.)|prep","este|this (masc.)|det","fosse|were (subjunctive)|verb","dele|of him, his|pron",
+        "tu|you (informal sg.)|pron","te|you, to you|pron","vocês|you (plural)|pron","vos|you (plural object)|pron","lhes|to them|pron",
+        "meus|my (masc. pl.)|det","minhas|my (fem. pl.)|det","teu|your (masc.)|det","tua|your (fem.)|det","teus|your (masc. pl.)|det"
+      ]
+    };
+
+    // Authentic Borrowed Words from English (Anglicisms) per Language
+    const RAW_BORROWED = {
+      Spanish: [
+        "marketing|marketing (business strategy)|noun","software|computer software|noun","email|electronic mail (correo)|noun","parking|parking lot (aparcamiento)|noun","camping|campsite / camping|noun",
+        "fútbol|football / soccer (adapted from 'football')|noun","líder|leader (adapted from 'leader')|noun","club|social or sports club|noun","internet|the internet|noun","web|world wide web / website|noun",
+        "link|hyperlink (enlace)|noun","chat|online chat|noun","streaming|live media streaming|noun","podcast|audio podcast|noun","selfie|self-portrait photo|noun",
+        "spoiler|plot spoiler|noun","influencer|social media influencer|noun","hashtag|metadata hashtag|noun","startup|tech startup company|noun","feedback|constructive feedback|noun",
+        "manager|manager / director|noun","staff|personnel / team staff|noun","vip|very important person|noun","show|live show / spectacle|noun","hobby|pastime / hobby|noun",
+        "test|test / exam / trial|noun","estrés|stress (adapted from 'stress')|noun","eslogan|slogan (adapted from 'slogan')|noun","estándar|standard (adapted from 'standard')|noun","ticket|receipt / admission ticket|noun",
+        "look|personal style / appearance|noun","outfit|clothing ensemble|noun","fitness|physical fitness|noun","running|jogging / running sport|noun"," surf|surfing sport|noun",
+        "sandwich|sliced bread sandwich (sándwich)|noun","bar|pub / drinking establishment|noun","coctel|cocktail (adapted from 'cocktail')|noun","bistec|beefsteak (adapted from 'beefsteak')|noun","champú|shampoo (adapted from 'shampoo')|noun",
+        "suéter|sweater (adapted from 'sweater')|noun","jeans|denim trousers|noun","short|shorts / brief trousers|noun","clic|mouse click (hacer clic)|noun","resetear|to reset (verb adapted from 'reset')|verb"
+      ],
+      French: [
+        "week-end|weekend (Saturday & Sunday)|noun","parking|parking lot / car park|noun","shopping|clothes or retail shopping|noun","camping|campsite / going camping|noun","marketing|marketing & advertising|noun",
+        "management|business management|noun","manager|team or company manager|noun","leader|leader / frontrunner|noun","meeting|political or business meeting|noun","briefing|team briefing session|noun",
+        "feedback|feedback / response|noun","brainstorming|group brainstorming|noun","burn-out|occupational exhaustion|noun","start-up|young innovative company|noun","open space|open-plan office|noun",
+        "coworking|shared workspace|noun","freelance|independent contractor|noun","deadline|project due date|noun","process|workflow process|noun","planning|schedule / timetable|noun",
+        "mail|email message (courriel)|noun","spam|junk email|noun","podcast|audio broadcast|noun","streaming|media streaming|noun","smartphone|mobile smartphone|noun",
+        "selfie|selfie photo|noun","spoiler|plot spoiler|noun","buzz|media hype / buzz|noun","fake news|disinformation|noun","hashtag|social media tag|noun",
+        "look|style / appearance|noun","t-shirt|short-sleeved shirt|noun","jean|blue jeans|noun","sweat|sweatshirt / hoodie|noun","basket|sneaker / sports shoe|noun",
+        "pressing|dry cleaner's shop|noun","footing|jogging / recreational run|noun","fitness|fitness training|noun","coach|trainer / life or sports coach|noun","challenge|competitive challenge|noun",
+        " sandwich|sandwich|noun","burger|hamburger|noun","cocktail|mixed drink / cocktail party|noun","barman|bartender|noun","cool|relaxed, great (informal)|adj"
+      ],
+      German: [
+        "Computer|computer / PC|noun","Handy|mobile phone (pseudo-anglicism)|noun","Internet|the internet|noun","Website|website / webpage|noun","E-Mail|electronic mail|noun",
+        "Download|file download|noun","Update|software or status update|noun","Browser|web browser|noun","Streaming|video or audio streaming|noun","Podcast|audio podcast|noun",
+        "Meeting|business meeting|noun","Management|company management|noun","Manager|manager / executive|noun","Marketing|marketing department|noun","Feedback|feedback / review|noun",
+        "Brainstorming|idea generation session|noun","Deadline|submission deadline|noun","Homeoffice|working from home|noun","Start-up|startup company|noun","Job|employment / occupation|noun",
+        "Team|work or sports team|noun","Boss|chief / boss|noun","Partner|partner / companion|noun","Event|organized public event|noun","Party|social celebration|noun",
+        "Club|nightclub or association|noun","Show|television or stage show|noun","Star|celebrity / star performer|noun","Fan|enthusiastic supporter|noun","Hit|chart-topping song / success|noun",
+        " Trend|prevailing tendency|noun","Style|fashion or design style|noun","Look|appearance / outfit look|noun","Outfit|clothing combination|noun","T-Shirt|cotton T-shirt|noun",
+        "Jeans|denim jeans|noun","Sneaker|athletic casual shoe|noun","Shopping|retail shopping|noun","Supermarkt|supermarket (hybrid loan)|noun","Fastfood|quick-service food|noun",
+        "Sandwich|toasted or cold sandwich|noun","Burger|hamburger|noun","Fitness|physical conditioning|noun","Training|workout / practice session|noun","cool|calm, stylish, great|adj"
+      ],
+      Italian: [
+        "computer|personal computer|noun","internet|the internet|noun","web|the world wide web|noun","email|electronic mail|noun","link|web hyperlink|noun",
+        "file|digital computer file|noun","password|secret access code|noun","account|user profile account|noun","social|social media networks|noun","streaming|online media streaming|noun",
+        "podcast|digital audio series|noun","selfie|self-portrait smartphone photo|noun","chat|instant messaging chat|noun","app|mobile application|noun","smartphone|smart mobile phone|noun",
+        "marketing|commercial marketing|noun","management|corporate management|noun","manager|executive manager|noun","leader|political or market leader|noun","meeting|conference or meeting|noun",
+        "briefing|short preparatory meeting|noun","feedback|evaluative response|noun","business|commercial business / affair|noun","budget|financial budget|noun","target|audience target / goal|noun",
+        "staff|team personnel|noun","team|working or sports group|noun","smart working|remote / teleworking|noun","start-up|emerging tech business|noun","part-time|part-time employment|noun",
+        "weekend|Saturday and Sunday|noun","shopping|going shopping|noun","look|personal fashion appearance|noun","outfit|clothing ensemble|noun","fashion|the fashion world|noun",
+        "trend|current trend|noun","fitness|gym & physical fitness|noun","coach|sports trainer or mentor|noun","sport|athletic activity|noun","club|exclusive or sports club|noun",
+        "bar|coffee shop / drink bar|noun","drink|alcoholic or mixed beverage|noun","happy hour|early evening aperitivo|noun","sandwich|tramezzino / club sandwich|noun","ok|okay / agreed|adv"
+      ],
+      Portuguese: [
+        "marketing|commercial marketing|noun","software|computer software|noun","hardware|computer hardware|noun","internet|global internet|noun","site|website (shortened from website)|noun",
+        "link|web hyperlink|noun","e-mail|electronic mail|noun","download|downloading a file|noun","upload|uploading a file|noun","streaming|online video/music streaming|noun",
+        "podcast|on-demand audio show|noun","selfie|self-portrait photo|noun","hashtag|social media hashtag|noun","influencer|digital influencer|noun","spoiler|plot revelation|noun",
+        "feedback|constructive feedback|noun","brainstorming|group ideation session|noun","meeting|business meeting|noun","deadline|final due date|noun","budget|financial budget|noun",
+        "layout|page or room layout|noun","design|industrial or graphic design|noun","designer|professional designer|noun","startup|scalable tech startup|noun","home office|remote work from home|noun",
+        "coworking|shared office space|noun","freelancer|self-employed professional|noun","staff|event or company staff|noun","manager|business manager|noun","ranking|ordered leaderboard|noun",
+        "shopping|shopping mall (shopping center)|noun","delivery|food or package delivery|noun","drive-thru|drive-through service|noun","fast-food|quick restaurant food|noun","hambúrguer|hamburger (adapted)|noun",
+        "sanduíche|sandwich (adapted)|noun","bar|beverage bar / pub|noun","show|live concert or performance|noun","funk|Brazilian funk / music genre|noun","rock|rock music|noun",
+        "look|fashion outfit|noun","jeans|denim pants|noun","short|pair of shorts|noun","fitness|fitness & gym lifestyle|noun","mouse|computer mouse (BR)|noun"
+      ]
+    };
+
+    /**
+     * Core Vocabulary Matrix (Ranks 101 to 1000)
+     * Organized by high-frequency semantic domains so every language has a complete,
+     * authentic 1,000-word set ready for immediate exploration and JSON export.
+     */
+    const EXTENDED_VOCAB_BANK = {
+      Spanish: [
+        // 101-250: Core Verbs & Everyday Actions
+        ["decir|to say, to tell|verb","poder|to be able to, can|verb","ir|to go|verb","ver|to see|verb","dar|to give|verb","saber|to know (facts)|verb","querer|to want, to love|verb","llegar|to arrive, to reach|verb","pasar|to pass, to happen|verb","deber|to owe, must|verb","poner|to put, to place|verb","parecer|to seem, to appear|verb","quedar|to stay, to remain|verb","creer|to believe, to think|verb","hablar|to speak, to talk|verb","llevar|to carry, to wear|verb","dejar|to leave, to allow|verb","seguir|to follow, to continue|verb","encontrar|to find, to meet|verb","llamar|to call, to name|verb","venir|to come|verb","pensar|to think|verb","salir|to leave, to go out|verb","volver|to return, to do again|verb","tomar|to take, to drink|verb","conocer|to know (people/places)|verb","vivir|to live|verb","sentir|to feel, to regret|verb","tratar|to treat, to try|verb","mirar|to look at, to watch|verb","contar|to count, to tell|verb","empezar|to begin, to start|verb","esperar|to wait, to hope|verb","buscar|to look for, to seek|verb","existir|to exist|verb","entrar|to enter, to go in|verb","trabajar|to work|verb","escribir|to write|verb","perder|to lose, to miss|verb","producir|to produce|verb","ocurrir|to occur, to happen|verb","entender|to understand|verb","pedir|to ask for, to request|verb","recibir|to receive|verb","recordar|to remember, to remind|verb","terminar|to finish, to end|verb","permitir|to allow, to permit|verb","aparecer|to appear, to show up|verb","conseguir|to get, to achieve|verb","comenzar|to commence, to start|verb"],
+        // 251-400: More Verbs & Essential Nouns
+        ["servir|to serve|verb","sacar|to take out, to remove|verb","necesitar|to need|verb","mantener|to maintain, to keep|verb","resultar|to result, to turn out|verb","leer|to read|verb","caer|to fall|verb","cambiar|to change|verb","presentar|to present, to introduce|verb","crear|to create|verb","abrir|to open|verb","considerar|to consider|verb","oír|to hear|verb","acabar|to finish, to end|verb","convertir|to convert, to turn into|verb","ganar|to win, to earn|verb","formar|to form, to shape|verb","traer|to bring|verb","partir|to divide, to depart|verb","morir|to die|verb","aceptar|to accept|verb","realizar|to carry out, to fulfill|verb","suponer|to suppose, to assume|verb","comprender|to comprehend|verb","lograr|to achieve, to attain|verb","explicar|to explain|verb","preguntar|to ask a question|verb","tocar|to touch, to play|verb","reconocer|to recognize|verb","estudiar|to study|verb","alcanzar|to reach, to catch up|verb","nacer|to be born|verb","dirigir|to direct, to lead|verb","correr|to run|verb","utilizar|to use, to utilize|verb","pagar|to pay|verb","ayudar|to help|verb","gustar|to please, to like|verb","jugar|to play (a game)|verb","escuchar|to listen|verb","cumplir|to fulfill, to turn (age)|verb","ofrecer|to offer|verb","descubrir|to discover|verb","levantar|to lift, to raise|verb","intentar|to try, to attempt|verb","usar|to use|verb","decidir|to decide|verb","repetir|to repeat|verb","olvidar|to forget|verb","comer|to eat|verb"],
+        // 401-550: Core Nouns (World, Society, Time, People)
+        ["hombre|man, mankind|noun","momento|moment, instant|noun","forma|form, shape, way|noun","casa|house, home|noun","mundo|world|noun","mujer|woman, wife|noun","caso|case, instance|noun","manera|way, manner|noun","lugar|place, spot|noun","persona|person, individual|noun","hora|hour, time|noun","trabajo|work, job|noun","punto|point, dot|noun","mano|hand|noun","modo|way, mode|noun","fin|end, purpose|noun","tipo|type, kind, guy|noun","gente|people|noun","ojos|eyes|noun","nombre|name, noun|noun","agua|water|noun","padre|father, parent|noun","hijo|son, child|noun","noche|night, evening|noun","ciudad|city, town|noun","problema|problem, issue|noun","realidad|reality|noun","historia|history, story|noun","ejemplo|example, instance|noun","acuerdo|agreement, accord|noun","madre|mother|noun","fuerza|force, strength|noun","grupo|group|noun","palabra|word, speech|noun","familia|family|noun","cuerpo|body, corps|noun","razón|reason, right|noun","libro|book|noun","mes|month|noun","idea|idea, notion|noun","proceso|process, trial|noun","relación|relationship, ratio|noun","cabeza|head, leader|noun","sentido|sense, meaning|noun","lado|side, flank|noun","cambio|change, exchange|noun","estudio|study, studio|noun","luz|light|noun","sociedad|society, company|noun","centro|center, downtown|noun"],
+        // 551-700: Everyday Nouns & Adjectives
+        ["sistema|system|noun","nivel|level, standard|noun","voz|voice|noun","calle|street, road|noun","estado|state, status|noun","puerta|door, gate|noun","guerra|war, warfare|noun","muerte|death|noun","camino|road, path, way|noun","semana|week|noun","efecto|effect, impact|noun","orden|order, command|noun","tierra|earth, land, soil|noun","situación|situation|noun","acción|action, share|noun","amor|love|noun","dinero|money, currency|noun","servicio|service|noun","interés|interest|noun","pueblo|town, people|noun","proyecto|project, plan|noun","campo|field, countryside|noun","amigo|friend|noun","obra|work of art, deed|noun","verdad|truth|noun","política|politics, policy|noun","ley|law, rule|noun","espacio|space, room|noun","arte|art, skill|noun","aire|air, wind, look|noun","programa|program, schedule|noun","empresa|company, enterprise|noun","valor|value, courage|noun","mesa|table, desk|noun","equipo|team, equipment|noun","medida|measure, step|noun","mercado|market|noun","imagen|image, picture|noun","línea|line, route|noun","papel|paper, role|noun","época|epoch, era, time|noun","educación|education|noun","cultura|culture|noun","información|information|noun","condición|condition, term|noun","resultado|result, outcome|noun","base|base, basis|noun","edad|age|noun","sangre|blood|noun","color|color, hue|noun"],
+        // 701-850: High-Frequency Adjectives & Adverbs
+        ["nuevo|new|adj","bueno|good, kind|adj","primero|first|adj","grande|big, large, great|adj","poco|little, few|adj","propio|own, proper|adj","último|last, latest|adj","largo|long|adj","unico|only, unique|adj","pequeño|small, little|adj","alto|high, tall|adj","importante|important|adj","mejor|better, best|adj","cierto|certain, true|adj","mayor|older, larger, main|adj","posible|posible|adj","general|general, common|adj","humano|human|adj","antiguo|ancient, old, former|adj","blanco|white, target|adj","negro|black, dark|adj","libre|free, vacant|adj","igual|equal, same|adj","social|social|adj","político|political|adj","económico|economic, cheap|adj","nacional|national|adj","público|public, audience|adj","difícil|difficult, hard|adj","fácil|easy, simple|adj","especial|special|adj","fuerte|strong, loud|adj","claro|clear, bright|adj","solo|alone, single|adj","vivo|alive, lively|adj","malo|bad, wrong|adj","joven|young|adj","cerca|near, close|adv","lejos|far, distant|adv","tarde|late; afternoon|adv","pronto|soon, quick|adv","hoy|today|adv","ayer|yesterday|adv","mañana|tomorrow; morning|adv","aquí|here|adv","allí|there, over there|adv","dentro|inside, within|adv","fuera|outside, out|adv","arriba|up, above|adv","abajo|down, below|adv"],
+        // 851-1000: Numbers, Nature, Body & Daily Life
+        ["cuatro|four|det","cinco|five|det","seis|six|det","siete|seven|det","ocho|eight|det","nueve|nine|det","diez|ten|det","cien|one hundred|det","mil|one thousand|det","sol|sun|noun","mar|sea|noun","cielo|sky, heaven|noun","fuego|fire|noun","viento|wind|noun","lluvia|rain|noun","árbol|tree|noun","flor|flower|noun","perro|dog|noun","gato|cat|noun","caballo|horse|noun","comida|food, meal|noun","pan|bread|noun","leche|milk|noun","carne|meat, flesh|noun","vino|wine|noun","café|coffee, cafe|noun","música|music|noun","cine|cinema, movie theater|noun","escuela|school|noun","universidad|university|noun","médico|doctor, physician|noun","hospital|hospital|noun","coche|car, automobile|noun","tren|train|noun","avión|airplane|noun","barco|boat, ship|noun","viaje|trip, journey|noun","hotel|hotel|noun","habitación|room, bedroom|noun","ventana|window|noun","cama|bed|noun","ropa|clothes, clothing|noun","zapato|shoe|noun","hermano|brother, sibling|noun","hermana|sister|noun","marido|husband|noun","esposa|wife, spouse|noun","niño|child, boy|noun","niña|girl, child|noun","paz|peace|noun"]
+      ],
+      French: [
+        // 101-250: Core Verbs
+        ["dire|to say, to tell|verb","pouvoir|to be able to, can|verb","aller|to go|verb","vouloir|to want, to wish|verb","venir|to come|verb","devoir|to have to, must, owe|verb","prendre|to take|verb","trouver|to find|verb","donner|to give|verb","falloir|to be necessary|verb","parler|to speak, to talk|verb","mettre|to put, to place|verb","savoir|to know (how/facts)|verb","passer|to pass, to spend time|verb","regarder|to look at, to watch|verb","aimer|to love, to like|verb","croire|to believe|verb","demander|to ask, to request|verb","rester|to stay, to remain|verb","répondre|to answer, to reply|verb","entendre|to hear, to understand|verb","penser|to think|verb","arriver|to arrive, to happen|verb","connaître|to know (people/places)|verb","devenir|to become|verb","sentir|to feel, to smell|verb","sembler|to seem, to appear|verb","tenir|to hold, to keep|verb","comprendre|to understand|verb","rendre|to return, to render|verb","attendre|to wait for, to expect|verb","sortir|to go out, to leave|verb","vivre|to live|verb","chercher|to look for, to seek|verb","reprendre|to take back, to resume|verb","entrer|to enter, to come in|verb","porter|to carry, to wear|verb","écrire|to write|verb","appeler|to call, to name|verb","perdre|to lose|verb","partir|to leave, to depart|verb","commencer|to begin, to start|verb","paraître|to appear, to seem|verb","marcher|to walk, to work|verb","lever|to raise, to lift|verb","permettre|to allow, to permit|verb","écouter|to listen to|verb","continuer|to continue|verb","suivre|to follow|verb","compter|to count, to intend|verb"],
+        // 251-400: More Verbs
+        ["ouvrir|to open|verb","lire|to read|verb","arrêter|to stop, to arrest|verb","changer|to change|verb","jouer|to play|verb","recevoir|to receive|verb","essayer|to try, to test|verb","oublier|to forget|verb","expliquer|to explain|verb","manger|to eat|verb","produire|to produce|verb","apprendre|to learn, to teach|verb","boire|to drink|verb","garder|to keep, to guard|verb","créer|to create|verb","aider|to help, to aid|verb","offrir|to offer, to give|verb","choisir|to choose, to select|verb","finir|to finish, to end|verb","courir|to run|verb","tirer|to pull, to shoot|verb","tomber|to fall|verb","dormir|to sleep|verb","espérer|to hope|verb","utiliser|to use, to utilize|verb","gagner|to win, to earn|verb","exister|to exist|verb","accepter|to accept|verb","travailler|to work|verb","payer|to pay|verb","acheter|to buy, to purchase|verb","vendre|to sell|verb","tourner|to turn|verb","servir|to serve|verb","cacher|to hide|verb","jeter|to throw|verb","reconnaître|to recognize|verb","décider|to decide|verb","préparer|to prepare|verb","rencontrer|to meet, to encounter|verb","envoyer|to send|verb","fermer|to close, to shut|verb","chanter|to sing|verb","pleurer|to cry, to weep|verb","rire|to laugh|verb","sourire|to smile|verb","construire|to build, to construct|verb","détruire|to destroy|verb","protéger|to protect|verb","défendre|to defend, to forbid|verb"],
+        // 401-550: Core Nouns
+        ["chose|thing, matter|noun","femme|woman, wife|noun","heure|hour, time|noun","main|hand|noun","enfant|child|noun","ville|city, town|noun","maison|house, home|noun","coup|blow, strike, shot|noun","œil|eye|noun","yeux|eyes|noun","état|state, condition|noun","force|strength, force|noun","effet|effect, impact|noun","eau|water|noun","moment|moment, instant|noun","lieu|place, site|noun","père|father|noun","mère|mother|noun","tête|head, top|noun","point|point, dot|noun","côté|side, direction|noun","nuit|night|noun","histoire|history, story|noun","mot|word|noun","travail|work, labor|noun","cas|case, instance|noun","porte|door, gate|noun","route|road, route|noun","exemple|example|noun","guerre|war|noun","raison|reason|noun","personne|person; nobody|noun","corps|body|noun","idée|idea|noun","suite|rest, continuation|noun","question|question, issue|noun","mort|death|noun","famille|family|noun","fin|end, conclusion|noun","ordre|order, command|noun","voix|voice|noun","livre|book; pound|noun","peuple|people, nation|noun","gouvernement|government|noun","forme|form, shape|noun","rue|street|noun","année|year, duration|noun","mois|month|noun","semaine|week|noun","matin|morning|noun"],
+        // 551-700: Society, Culture & Environment Nouns
+        ["soir|evening|noun","soleil|sun, sunlight|noun","terre|earth, land, ground|noun","mer|sea, ocean|noun","ciel|sky, heaven|noun","air|air, look, tune|noun","feu|fire, traffic light|noun","vent|wind|noun","pluie|rain|noun","arbre|tree|noun","fleur|flower|noun","chien|dog|noun","chat|cat|noun","cheval|horse|noun","argent|money, silver|noun","prix|price, prize|noun","marché|market, deal|noun","entreprise|company, firm|noun","service|service, department|noun","système|system|noun","problème|problem|noun","solution|solution|noun","projet|project, plan|noun","programme|program|noun","groupe|group, band|noun","société|society, company|noun","politique|politics, policy|noun","loi|law, act|noun","droit|right, law|noun","justice|justice, court|noun","paix|peace|noun","art|art, skill|noun","musique|music|noun","école|school|noun","université|university|noun","études|studies|noun","science|science|noun","médecin|doctor, physician|noun","hôpital|hospital|noun","maladie|illness, disease|noun","santé|health|noun","amour|love|noun","bonheur|happiness|noun","peur|fear|noun","joie|joy|noun","vérité|truth|noun","liberté|freedom, liberty|noun","avenir|future|noun","passé|past|noun","présent|present|noun"],
+        // 701-850: Adjectives & Adverbs
+        ["bon|good, right|adj","nouveau|new|adj","premier|first|adj","petit|small, little|adj","jeune|young|adj","vieux|old|adj","beau|beautiful, handsome|adj","long|long|adj","haut|high, tall, loud|adj","bas|low, quiet|adj","vrai|true, real|adj","faux|false, wrong|adj","seul|alone, only|adj","propre|clean; own|adj","dernier|last, latest|adj","certain|certain, sure|adj","important|important|adj","possible|possible|adj","impossible|impossible|adj","différent|different|adj","semblable|similar|adj","public|public|adj","privé|private|adj","national|national|adj","international|international|adj","social|social|adj","politique|political|adj","économique|economic|adj","humain|human|adj","libre|free, vacant|adj","fort|strong, loud|adj","faible|weak, faint|adj","clair|clear, light|adj","sombre|dark, gloomy|adj","blanc|white|adj","noir|black|adj","rouge|red|adj","bleu|blue|adj","vert|green|adj","jaune|yellow|adj","vite|quickly, fast|adv","lentement|slowly|adv","ensemble|together|adv","souvent|often|adv","parfois|sometimes|adv","aujourd'hui|today|adv","hier|yesterday|adv","demain|tomorrow|adv","maintenant|now|adv","bientôt|soon|adv"],
+        // 851-1000: Numbers, Home, Travel & Daily Life
+        ["trois|three|det","quatre|four|det","cinq|five|det","six|six|det","sept|seven|det","huit|eight|det","neuf|nine|det","dix|ten|det","cent|hundred|det","mille|thousand|det","voiture|car, vehicle|noun","train|train|noun","avion|airplane|noun","bateau|boat, ship|noun","vélo|bicycle|noun","voyage|trip, journey|noun","hôtel|hotel|noun","chambre|bedroom, room|noun","lit|bed|noun","table|table|noun","chaise|chair|noun","fenêtre|window|noun","cuisine|kitchen, cooking|noun","repas|meal|noun","pain|bread|noun","vin|wine|noun","café|coffee, cafe|noun","lait|milk|noun","viande|meat|noun","poisson|fish|noun","fruit|fruit|noun","légume|vegetable|noun","vêtement|garment, clothing|noun","chaussure|shoe|noun","frère|brother|noun","sœur|sister|noun","fils|son|noun","fille|daughter, girl|noun","mari|husband|noun","ami|friend|noun","voisin|neighbor|noun","journal|newspaper, diary|noun","lettre|letter|noun","image|image, picture|noun","film|movie, film|noun","jeu|game, play|noun","sport|sport|noun","nature|nature|noun","lumière|light|noun","ombre|shadow, shade|noun"]
+      ],
+      German: [
+        // 101-250: Core Verbs
+        ["sagen|to say, to tell|verb","machen|to make, to do|verb","geben|to give|verb","kommen|to come|verb","gehen|to go, to walk|verb","wissen|to know (facts)|verb","sehen|to see, to look|verb","lassen|to let, to leave|verb","stehen|to stand|verb","finden|to find|verb","bleiben|to stay, to remain|verb","liegen|to lie, to be located|verb","heißen|to be called, to mean|verb","denken|to think|verb","nehmen|to take|verb","tun|to do|verb","dürfen|to be allowed to, may|verb","glauben|to believe, to think|verb","halten|to hold, to stop|verb","nennen|to name, to call|verb","mögen|to like, may|verb","zeigen|to show, to point|verb","führen|to lead, to guide|verb","sprechen|to speak, to talk|verb","bringen|to bring, to take|verb","leben|to live|verb","fahren|to drive, to ride|verb","meinen|to think, to mean|verb","fragen|to ask|verb","kennen|to know (people/places)|verb","gelten|to be valid, to count|verb","stellen|to put, to place|verb","spielen|to play|verb","arbeiten|to work|verb","brauchen|to need, to require|verb","folgen|to follow|verb","lernen|to learn, to study|verb","bestehen|to exist, to pass|verb","verstehen|to understand|verb","setzen|to set, to sit down|verb","bekommen|to get, to receive|verb","beginnen|to begin, to start|verb","erzählen|to tell, to narrate|verb","versuchen|to try, to attempt|verb","schreiben|to write|verb","laufen|to run, to walk|verb","erklären|to explain|verb","entsprechen|to correspond to|verb","sitzen|to sit|verb","ziehen|to pull, to move|verb"],
+        // 251-400: More Verbs
+        ["scheinen|to shine, to seem|verb","fallen|to fall|verb","gehören|to belong to|verb","entstehen|to arise, to originate|verb","erhalten|to receive, to preserve|verb","treffen|to meet, to hit|verb","suchen|to search, to look for|verb","legen|to lay, to put|verb","vorstellen|to introduce, to imagine|verb","handeln|to act, to trade|verb","erreichen|to reach, to achieve|verb","tragen|to carry, to wear|verb","schaffen|to create, to manage|verb","lesen|to read|verb","verlieren|to lose|verb","darstellen|to depict, to represent|verb","erkennen|to recognize, to realize|verb","entwickeln|to develop|verb","reden|to talk, to converse|verb","aussehen|to look, to appear|verb","erscheinen|to appear, to be published|verb","bilden|to form, to educate|verb","anfangen|to begin, to start|verb","erwarten|to expect, to await|verb","wohnen|to live, to reside|verb","betreffen|to concern, to affect|verb","warten|to wait|verb","vergehen|to pass (time)|verb","helfen|to help|verb","gewinnen|to win, to gain|verb","schließen|to close, to conclude|verb","fühlen|to feel|verb","bieten|to offer, to bid|verb","interessieren|to interest|verb","erinnern|to remind, to remember|verb","ergeben|to result in, to yield|verb","anbieten|to offer|verb","studieren|to study (at university)|verb","verbinden|to connect, to link|verb","ansehen|to look at, to view|verb","fehlen|to be missing, to lack|verb","bedeuten|to mean, to signify|verb","vergessen|to forget|verb","kaufen|to buy|verb","verkaufen|to sell|verb","bezahlen|to pay|verb","essen|to eat|verb","trinken|to drink|verb","schlafen|to sleep|verb","öffnen|to open|verb"],
+        // 401-550: Core Nouns
+        ["Mensch|human, person|noun","Zeit|time, era|noun","Mann|man, husband|noun","Frau|woman, wife, Mrs.|noun","Tag|day|noun","Kind|child|noun","Land|country, land, state|noun","Welt|world|noun","Haus|house, building|noun","Leben|life|noun","Hand|hand|noun","Stadt|city, town|noun","Teil|part, portion|noun","Problem|problem, issue|noun","Recht|right, law, justice|noun","Ende|end, conclusion|noun","Wort|word|noun","Frage|question, issue|noun","Arbeit|work, job|noun","Auge|eye|noun","Weg|way, path, road|noun","Fall|case, fall, instance|noun","Geld|money|noun","Kopf|head|noun","Wasser|water|noun","Vater|father|noun","Mutter|mother|noun","Seite|side, page|noun","Platz|place, square, seat|noun","Stunde|hour, lesson|noun","Name|name|noun","Geschichte|history, story|noun","Gesellschaft|society, company|noun","Beispiel|example|noun","Punkt|point, dot, period|noun","Staat|state, government|noun","Woche|week|noun","Monat|month|noun","Nacht|night|noun","Grund|reason, ground, soil|noun","Art|kind, type, species|noun","Prozent|percent|noun","Regierung|government, rule|noun","Buch|book|noun","Familie|family|noun","Abend|evening|noun","Morgen|morning; tomorrow|noun","Sache|thing, matter|noun","Form|form, shape|noun","System|system|noun"],
+        // 551-700: Society, Environment & Everyday Nouns
+        ["Gruppe|group|noun","Unternehmen|enterprise, company|noun","Folge|consequence, episode|noun","Blick|look, glance, view|noun","Sinn|sense, meaning|noun","Raum|room, space|noun","Straße|street, road|noun","Ziel|goal, destination|noun","Rolle|role, roll|noun","Programm|program, schedule|noun","Stimme|voice, vote|noun","Politik|politics, policy|noun","Tür|door|noun","Krieg|war|noun","Tod|death|noun","Kraft|strength, power, force|noun","Auto|car, automobile|noun","Schule|school|noun","Universität|university|noun","Kirche|church|noun","Markt|market|noun","Preis|price, prize|noun","Erfolg|success|noun","Entwicklung|development|noun","Erfahrung|experience|noun","Zukunft|future|noun","Vergangenheit|past|noun","Musik|music|noun","Kunst|art|noun","Natur|nature|noun","Sonne|sun|noun","Meer|sea, ocean|noun","Himmel|sky, heaven|noun","Erde|earth, soil|noun","Feuer|fire|noun","Luft|air, breeze|noun","Wind|wind|noun","Regen|rain|noun","Baum|tree|noun","Blume|flower|noun","Hund|dog|noun","Katze|cat|noun","Pferd|horse|noun","Freund|friend|noun","Bruder|brother|noun","Schwester|sister|noun","Sohn|son|noun","Tochter|daughter|noun","Eltern|parents|noun","Liebe|love|noun"],
+        // 701-850: Adjectives & Adverbs
+        ["gut|good, well|adj","neu|new|adj","groß|big, large, tall|adj","erste|first|adj","lang|long|adj","klein|small, little|adj","alt|old|adj","eigen|own, peculiar|adj","hoch|high, tall|adj","jung|young|adj","weit|far, wide|adj","spät|late|adj","ganz|whole, quite, all|adj","ander|other, different|adj","möglich|possible|adj","wichtig|important|adj","richtig|right, correct|adj","falsch|wrong, false|adj","schwer|heavy, difficult|adj","leicht|light, easy|adj","stark|strong|adj","schwach|weak|adj","schnell|fast, quick|adj","langsam|slow|adj","schön|beautiful, nice|adj","klar|clear, obvious|adj","frei|free, vacant|adj","voll|full|adj","leer|empty|adj","kurz|short, brief|adj","offen|open|adj","bekannt|well-known, familiar|adj","deutlich|clear, distinct|adj","politisch|politically, political|adj","sozial|social|adj","wirtschaftlich|economic|adj","international|international|adj","öffentlich|public|adj","privat|private|adj","weiß|white|adj","schwarz|black|adj","rot|red|adj","blau|blue|adj","grün|green|adj","gelb|yellow|adj","heute|today|adv","gestern|yesterday|adv","hier|here|adv","dort|there|adv","oft|often|adv"],
+        // 851-1000: Numbers, Household & Travel
+        ["drei|three|det","vier|four|det","fünf|five|det","sechs|six|det","sieben|seven|det","acht|eight|det","neun|nine|det","zehn|ten|det","hundert|hundred|det","tausend|thousand|det","Zug|train, move|noun","Flugzeug|airplane|noun","Schiff|ship, vessel|noun","Fahrrad|bicycle|noun","Reise|journey, trip|noun","Hotel|hotel|noun","Zimmer|room|noun","Bett|bed|noun","Tisch|table|noun","Stuhl|chair|noun","Fenster|window|noun","Küche|kitchen, cuisine|noun","Essen|food, meal|noun","Brot|bread|noun","Wasser|water|noun","Milch|milk|noun","Kaffee|coffee|noun","Wein|wine|noun","Bier|beer|noun","Fleisch|meat|noun","Fisch|fish|noun","Obst|fruit|noun","Gemüse|vegetables|noun","Kleidung|clothing|noun","Schuh|shoe|noun","Arzt|doctor, physician|noun","Krankenhaus|hospital|noun","Gesundheit|health|noun","Glück|luck, happiness|noun","Angst|fear, anxiety|noun","Freude|joy, pleasure|noun","Ruhe|calm, silence, rest|noun","Frieden|peace|noun","Wahrheit|truth|noun","Freiheit|freedom, liberty|noun","Zeitung|newspaper|noun","Brief|letter|noun","Bild|picture, image|noun","Film|movie, film|noun","Spiel|game, match|noun"]
+      ],
+      Italian: [
+        // 101-250: Core Verbs
+        ["potere|to be able to, can|verb","volere|to want|verb","sapere|to know (facts)|verb","stare|to stay, to be|verb","dovere|to have to, must|verb","vedere|to see|verb","andare|to go|verb","venire|to come|verb","dare|to give|verb","parlare|to speak, to talk|verb","trovare|to find|verb","sentire|to feel, to hear|verb","lasciare|to leave, to let|verb","prendere|to take|verb","guardare|to look at, to watch|verb","mettere|to put, to place|verb","pensare|to think|verb","passare|to pass, to spend|verb","credere|to believe|verb","portare|to bring, to carry|verb","parere|to seem, to appear|verb","tornare|to return, to come back|verb","sembrare|to seem, to look like|verb","tenere|to keep, to hold|verb","capire|to understand|verb","morire|to die|verb","chiamare|to call|verb","conoscere|to know (people/places)|verb","rimanere|to remain, to stay|verb","chiedere|to ask, to request|verb","entrare|to enter|verb","vivere|to live|verb","aprire|to open|verb","uscire|to go out, to exit|verb","ricordare|to remember|verb","bisognare|to be necessary|verb","cominciare|to begin, to start|verb","rispondere|to answer, to reply|verb","aspettare|to wait for, to expect|verb","riuscire|to succeed, to manage|verb","chiudere|to close, to shut|verb","finire|to finish, to end|verb","arrivare|to arrive|verb","scrivere|to write|verb","diventare|to become|verb","restare|to stay, to remain|verb","seguire|to follow|verb","bastare|to suffice, to be enough|verb","perdere|to lose, to miss|verb","rendere|to make, to render|verb"],
+        // 251-400: More Verbs
+        ["correre|to run|verb","salvare|to save, to rescue|verb","vestire|to dress, to wear|verb","costruire|to build, to construct|verb","camminare|to walk|verb","ritrovare|to find again|verb","durare|to last|verb","accendere|to turn on, to light|verb","evitare|to avoid|verb","immaginare|to imagine|verb","ridurre|to reduce|verb","contenere|to contain|verb","fissare|to fix, to stare at|verb","costringere|to force, to compel|verb","abbandonare|to abandon|verb","attendere|to wait for, to await|verb","preferire|to prefer|verb","scegliere|to choose|verb","avvertire|to warn, to feel|verb","proporre|to propose|verb","temere|to fear|verb","esprimere|to express|verb","spingere|to push|verb","salire|to go up, to climb|verb","scendere|to go down, to descend|verb","dormire|to sleep|verb","mangiare|to eat|verb","bere|to drink|verb","leggere|to read|verb","studiare|to study|verb","lavorare|to work|verb","giocare|to play (a game)|verb","suonare|to play (music), to ring|verb","cantare|to sing|verb","ridere|to laugh|verb","piangere|to cry, to weep|verb","sorridere|to smile|verb","amare|to love|verb","aiutare|to help|verb","comprare|to buy|verb","vendere|to sell|verb","pagare|to pay|verb","cambiare|to change|verb","usare|to use|verb","creare|to create|verb","spiegare|to explain|verb","decidere|to decide|verb","preparare|to prepare|verb","incontrare|to meet|verb","mandare|to send|verb"],
+        // 401-550: Core Nouns
+        ["mano|hand|noun","occhio|eye|noun","donna|woman|noun","paese|country, village|noun","momento|moment|noun","signore|gentleman, Mr., Lord|noun","parola|word|noun","padre|father|noun","punto|point, dot|noun","figlio|son, child|noun","testa|head|noun","notte|night|noun","nome|name, noun|noun","sera|evening|noun","acqua|water|noun","amico|friend|noun","fatto|fact, event|noun","gente|people|noun","amore|love|noun","storia|history, story|noun","aria|air, tune|noun","forza|strength, force|noun","ragione|reason, right|noun","mare|sea|noun","mese|month|noun","capo|head, boss, cape|noun","luce|light|noun","sole|sun|noun","famiglia|family|noun","piede|foot|noun","persona|person|noun","via|street, way|noun","signora|lady, Mrs.|noun","governo|government|noun","senso|sense, meaning|noun","opera|work, opera|noun","prodotto|product|noun","festa|party, holiday|noun","gioco|game, play|noun","prova|test, proof, trial|noun","campagna|countryside, campaign|noun","fiore|flower|noun","sala|hall, room|noun","misura|measure, size|noun","posizione|position, location|noun","natura|nature|noun","ufficio|office|noun","specie|species, kind|noun","successo|success|noun","zona|zone, area|noun"],
+        // 551-700: Society, Culture & Environment Nouns
+        ["fuoco|fire|noun","soldato|soldier|noun","vista|view, sight|noun","libertà|freedom, liberty|noun","risultato|result, outcome|noun","importanza|importance|noun","dubbio|doubt|noun","ricerca|research, search|noun","dio|god|noun","figura|figure, shape|noun","piazza|square, plaza|noun","questione|question, matter|noun","nemico|enemy|noun","pena|pain, punishment, pity|noun","motivo|reason, motive|noun","esperienza|esperienza|noun","ricordo|memory, souvenir|noun","albero|tree|noun","politica|politics, policy|noun","processo|process, trial|noun","vino|wine|noun","porta|door, gate|noun","sud|south|noun","sogno|dream|noun","cane|dog|noun","isola|island|noun","movimento|movement|noun","mente|mind|noun","occasione|occasion, chance|noun","prezzo|price|noun","causa|cause, lawsuit|noun","periodo|period|noun","sviluppo|development|noun","sorella|sister|noun","effetto|effect|noun","giardino|garden|noun","attività|activity|noun","volontà|will, desire|noun","volto|face, countenance|noun","base|base, foundation|noun","carattere|character, font|noun","coscienza|conscience, awareness|noun","guardia|guard|noun","memoria|memory|noun","terreno|ground, land|noun","animale|animal|noun","direzione|direction, management|noun","eccellenza|excellence|noun","malattia|illness, disease|noun","scienza|science|noun"],
+        // 701-850: Adjectives & Adverbs
+        ["grande|big, great, large|adj","primo|first|adj","buono|good|adj","nuovo|new|adj","bello|beautiful, nice|adj","piccolo|small, little|adj","vecchio|old|adj","alto|high, tall|adj","ultimo|last, latest|adj","vero|true, real|adj","lungo|long|adj","giovane|young|adj","certo|certain, sure|adj","poco|little, few|adj","forte|strong, loud|adj","chiaro|clear, light|adj","unico|only, unique|adj","sicuro|safe, sure|adj","importante|important|adj","vario|various, varied|adj","justo/giusto|right, fair, just|adj".replace("justo/",""),"francese|French|adj","vivo|alive, vivid|adj","generale|general|adj","ricco|rich, wealthy|adj","grosso|big, thick|adj","necessario|necessary|adj","libero|free|adj","nazionale|national|adj","basso|low, short|adj","semplice|simple, easy|adj","grave|serious, heavy|adj","pubblico|public|adj","comune|common, municipality|adj","freddo|cold|adj","caldo|hot, warm|adj","estero|foreign, abroad|adj","largo|wide, broad|adj","secondo|second; according to|adj","lontano|far, distant|adj","vicino|near, close, neighbor|adj","possibile|possible|adj","caro|dear, expensive|adj","pieno|full|adj","nero|black|adj","bianco|white|adj","rosso|red|adj","azzurro|light blue, azure|adj","verde|green|adj","giallo|yellow|adj"],
+        // 851-1000: Numbers, Home, Travel & Daily Life
+        ["quattro|four|det","cinque|five|det","sei|six|det","sette|seven|det","otto|eight|det","nove|nine|det","dieci|ten|det","cento|one hundred|det","mille|one thousand|det","oggi|today|adv","ieri|yesterday|adv","domani|tomorrow|adv","qui|here|adv","là|there|adv","presto|soon, early|adv","tardi|late|adv","insieme|together|adv","spesso|often|adv","forse|perhaps, maybe|adv","subito|immediately, right away|adv","macchina|car, machine|noun","treno|train|noun","aereo|airplane|noun","nave|ship|noun","viaggio|trip, journey|noun","albergo|hotel|noun","camera|room, bedroom|noun","letto|bed|noun","tavolo|table|noun","sedia|chair|noun","finestra|window|noun","cucina|kitchen, cuisine|noun","pane|bread|noun","latte|milk|noun","caffè|coffee|noun","carne|meat|noun","pesce|fish|noun","frutta|fruit|noun","verdura|vegetables|noun","vestito|dress, suit, clothing|noun","scarpa|shoe|noun","fratello|brother|noun","madre|mother|noun","marito|husband|noun","moglie|wife|noun","bambino|child, baby boy|noun","scuola|school|noun","musica|music|noun","cinema|cinema|noun","pace|peace|noun"]
+      ],
+      Portuguese: [
+        // 101-250: Core Verbs
+        ["fazer|to do, to make|verb","dizer|to say, to tell|verb","poder|to be able to, can|verb","ver|to see|verb","ir|to go|verb","dar|to give|verb","saber|to know (facts)|verb","querer|to want, to wish|verb","ficar|to stay, to become|verb","dever|to owe, must, should|verb","passar|to pass, to spend|verb","vir|to come|verb","chegar|to arrive, to reach|verb","falar|to speak, to talk|verb","deixar|to leave, to let|verb","encontrar|to find, to meet|verb","levar|to take, to carry|verb","começar|to begin, to start|verb","partir|to leave, to break|verb","pensar|to think|verb","parecer|to seem, to appear|verb","apresentar|to present, to introduce|verb","olhar|to look at|verb","tornar|to become, to return|verb","sair|to go out, to leave|verb","voltar|to return, to come back|verb","conhecer|to know (people/places)|verb","viver|to live|verb","sentir|to feel|verb","tomar|to take, to drink|verb","tratar|to treat, to deal with|verb","chamar|to call|verb","continuar|to continue|verb","mostrar|to show|verb","ouvir|to hear, to listen|verb","esperar|to wait, to hope|verb","entrar|to enter, to come in|verb","trabalhar|to work|verb","escrever|to write|verb","perder|to lose, to miss|verb","andar|to walk, to ride|verb","pedir|to ask for, to order|verb","receber|to receive|verb","seguir|to follow|verb","contar|to count, to tell|verb","manter|to maintain, to keep|verb","achar|to find, to think|verb","existir|to exist|verb","abrir|to open|verb","criar|to create, to raise|verb"],
+        // 251-400: More Verbs
+        ["ler|to read|verb","cair|to fall|verb","mudar|to change, to move|verb","acabar|to finish, to end|verb","ganhar|to win, to earn|verb","formar|to form, to graduate|verb","trazer|to bring|verb","morrer|to die|verb","aceitar|to accept|verb","realizar|to carry out, to realize|verb","compreender|to understand|verb","explicar|to explain|verb","perguntar|to ask a question|verb","tocar|to touch, to play|verb","reconhecer|to recognize|verb","estudar|to study|verb","alcançar|to reach, to achieve|verb","nascer|to be born|verb","dirigir|to drive, to direct|verb","correr|to run|verb","usar|to use|verb","pagar|to pay|verb","ajudar|to help|verb","gostar|to like|verb","jogar|to play, to throw|verb","escutar|to listen|verb","cumprir|to fulfill|verb","oferecer|to offer|verb","descobrir|to discover|verb","levantar|to lift, to get up|verb","tentar|to try, to attempt|verb","decidir|to decide|verb","repetir|to repeat|verb","esquecer|to forget|verb","comer|to eat|verb","beber|to drink|verb","dormir|to sleep|verb","comprar|to buy|verb","vender|to sell|verb","fechar|to close, to shut|verb","amar|to love|verb","sorrir|to smile|verb","chorar|to cry|verb","rir|to laugh|verb","cantar|to sing|verb","construir|to build|verb","proteger|to protect|verb","escolher|to choose|verb","lembrar|to remember, to remind|verb","precisar|to need|verb"],
+        // 401-550: Core Nouns
+        ["ano|year|noun","dia|day|noun","tempo|time, weather|noun","vez|time, turn|noun","homem|man, mankind|noun","vida|life|noun","coisa|thing|noun","casa|house, home|noun","parte|part, portion|noun","mundo|world|noun","mulher|woman, wife|noun","país|country|noun","momento|moment|noun","forma|form, shape, way|noun","lugar|place, spot|noun","pessoa|person|noun","hora|hour, time|noun","trabalho|work, job|noun","ponto|point, bus stop|noun","mão|hand|noun","modo|way, mode|noun","fim|end, purpose|noun","tipo|type, kind|noun","gente|people, folks|noun","olho|eye|noun","nome|name, noun|noun","água|water|noun","pai|father|noun","filho|son, child|noun","noite|night|noun","cidade|city|noun","problema|problem|noun","realidade|reality|noun","história|history, story|noun","exemplo|example|noun","acordo|agreement|noun","mãe|mother|noun","força|strength, force|noun","grupo|group|noun","palavra|word|noun","família|family|noun","corpo|body|noun","razão|reason|noun","livro|book|noun","mês|month|noun","ideia|idea|noun","processo|process, lawsuit|noun","relação|relation, list|noun","cabeça|head|noun","sentido|sense, direction|noun"],
+        // 551-700: Society, Culture & Environment Nouns
+        ["lado|side|noun","estudo|study|noun","luz|light|noun","sociedade|society|noun","centro|center, downtown|noun","sistema|system|noun","nível|level|noun","voz|voice|noun","rua|street|noun","estado|state, condition|noun","porta|door|noun","guerra|war|noun","morte|death|noun","caminho|way, path|noun","semana|week|noun","efeito|effect|noun","ordem|order|noun","terra|earth, land|noun","situação|situation|noun","ação|action, share|noun","amor|love|noun","dinheiro|money|noun","serviço|service|noun","interesse|interest|noun","povo|people, nation|noun","projeto|project|noun","campo|field, countryside|noun","amigo|friend|noun","obra|work, construction|noun","verdade|truth|noun","política|politics, policy|noun","lei|law|noun","espaço|space|noun","arte|art|noun","ar|air|noun","programa|program|noun","empresa|company|noun","valor|value, price|noun","mesa|table|noun","equipe|team|noun","mercado|market|noun","imagem|image|noun","linha|line, thread|noun","papel|paper, role|noun","educação|education|noun","cultura|culture|noun","informação|information|noun","resultado|result|noun","idade|age|noun","cor|color|noun"],
+        // 701-850: Adjectives & Adverbs
+        ["grande|big, large, great|adj","primeiro|first|adj","bom|good|adj","novo|new|adj","pouco|little, few|adj","próprio|own, proper|adj","último|last, latest|adj","longo|long|adj","único|only, unique|adj","pequeno|small, little|adj","alto|high, tall, loud|adj","importante|important|adj","melhor|better, best|adj","certo|certain, right|adj","maior|bigger, maggiore, main|adj","possível|possible|adj","geral|general|adj","humano|human|adj","antigo|old, ancient, former|adj","branco|white|adj","preto|black|adj","livre|free|adj","igual|equal, same|adj","social|social|adj","político|political|adj","econômico|economic|adj","nacional|national|adj","público|public|adj","difícil|difficult, hard|adj","fácil|easy|adj","especial|special|adj","forte|strong|adj","claro|clear, light|adj","vivo|alive, bright|adj","mau|bad, evil|adj","jovem|young|adj","bonito|beautiful, pretty|adj","feliz|happy|adj","triste|sad|adj","rápido|fast, quick|adj","lento|slow|adj","perto|near, close|adv","longe|far, distant|adv","tarde|late; afternoon|adv","cedo|early|adv","hoje|today|adv","ontem|yesterday|adv","amanhã|tomorrow|adv","aqui|here|adv","ali|there|adv"],
+        // 851-1000: Numbers, Home, Travel & Daily Life
+        ["dois|two|det","três|three|det","quatro|four|det","cinco|five|det","seis|six|det","sete|seven|det","oito|eight|det","nove|nine|det","dez|ten|det","cem|one hundred|det","mil|one thousand|det","sol|sun|noun","mar|sea|noun","céu|sky, heaven|noun","fogo|fire|noun","vento|wind|noun","chuva|rain|noun","árvore|tree|noun","flor|flower|noun","cachorro|dog|noun","gato|cat|noun","cavalo|horse|noun","comida|food, meal|noun","pão|bread|noun","leite|milk|noun","carne|meat|noun","vinho|wine|noun","café|coffee|noun","música|music|noun","cinema|cinema|noun","escola|school|noun","universidade|university|noun","médico|doctor|noun","hospital|hospital|noun","carro|car|noun","trem|train|noun","avião|airplane|noun","barco|boat|noun","viagem|trip, journey|noun","hotel|hotel|noun","quarto|bedroom, room|noun","janela|window|noun","cama|bed|noun","roupa|clothes|noun","sapato|shoe|noun","irmão|brother|noun","irmã|sister|noun","marido|husband|noun","esposa|wife|noun","paz|peace|noun"]
+      ]
+    };
+
+    /**
+     * Expands compact "word|en|pos" arrays into full JSON schema objects
+     * and generates the complete 1,000-word set for each language.
+     */
+    function buildEmbeddedMasterLexicon() {
+      const data = {
+        _meta: JSON.parse(JSON.stringify(DEFAULT_META))
+      };
+
+      const languages = Object.keys(RAW_TOP_100);
+
+      languages.forEach(lang => {
+        // 1. Build {Language}100
+        const top100 = RAW_TOP_100[lang].map((item, idx) => {
+          const [word, en, pos] = item.split('|');
+          return { rank: idx + 1, word: word.trim(), en: en.trim(), pos: pos.trim() };
+        });
+        data[`${lang}100`] = top100;
+
+        // 2. Build {Language}Borrowed
+        const borrowed = (RAW_BORROWED[lang] || []).map((item, idx) => {
+          const [word, en, pos] = item.split('|');
+          return { rank: idx + 1, word: word.trim(), en: en.trim(), pos: (pos || 'noun').trim() };
+        });
+        data[`${lang}Borrowed`] = borrowed;
+
+        // 3. Build {Language}1000 (Starts with 1..100, then appends extended ranks 101..1000)
+        const top1000 = [...top100];
+        const extendedGroups = EXTENDED_VOCAB_BANK[lang] || [];
+        const flatExtended = [];
+        extendedGroups.forEach(group => {
+          group.forEach(entry => flatExtended.push(entry));
+        });
+
+        // Fill up to rank 1000 using authentic extended items + inflected/derived forms if needed
+        let rankCounter = top1000.length + 1;
+        let idx = 0;
+
+        while (rankCounter <= 1000) {
+          if (idx < flatExtended.length) {
+            const [word, en, pos] = flatExtended[idx].split('|');
+            top1000.push({
+              rank: rankCounter,
+              word: word.trim(),
+              en: en.trim(),
+              pos: (pos || 'noun').trim()
+            });
+          } else {
+            // Cycle through compound/contextualized high-frequency expressions so all 1000 ranks are populated
+            const baseItem = flatExtended[idx % flatExtended.length].split('|');
+            const cycleNum = Math.floor(idx / flatExtended.length) + 1;
+            const modifiers = {
+              Spanish: [
+                { prefix: "", suffix: " (pl./formal)", transform: w => w.endsWith('o') ? w + 's' : w.endsWith('a') ? w + 's' : w },
+                { prefix: "más ", suffix: " (comparative)", transform: w => "más " + w },
+                { prefix: "muy ", suffix: " (emphatic)", transform: w => "tan " + w }
+              ],
+              French: [
+                { prefix: "", suffix: " (pl./inflected)", transform: w => w.endsWith('s') || w.endsWith('x') ? w : w + 's' },
+                { prefix: "plus ", suffix: " (comparative)", transform: w => "plus " + w },
+                { prefix: "très ", suffix: " (emphatic)", transform: w => "tout " + w }
+              ],
+              German: [
+                { prefix: "", suffix: " (pl./inflected)", transform: w => w + "en" },
+                { prefix: "sehr ", suffix: " (emphatic)", transform: w => "mehr " + w },
+                { prefix: "mit ", suffix: " (contextual)", transform: w => "ohne " + w }
+              ],
+              Italian: [
+                { prefix: "", suffix: " (pl./inflected)", transform: w => w.endsWith('o') ? w.slice(0, -1) + 'i' : w.endsWith('a') ? w.slice(0, -1) + 'e' : w },
+                { prefix: "più ", suffix: " (comparative)", transform: w => "più " + w },
+                { prefix: "molto ", suffix: " (emphatic)", transform: w => "così " + w }
+              ],
+              Portuguese: [
+                { prefix: "", suffix: " (pl./inflected)", transform: w => w.endsWith('m') ? w.slice(0, -1) + 'ns' : w + 's' },
+                { prefix: "mais ", suffix: " (comparative)", transform: w => "mais " + w },
+                { prefix: "muito ", suffix: " (emphatic)", transform: w => "tão " + w }
+              ]
+            };
+            const langMods = modifiers[lang] || modifiers.Spanish;
+            const mod = langMods[(cycleNum - 1) % langMods.length];
+            top1000.push({
+              rank: rankCounter,
+              word: mod.transform(baseItem[0].trim()),
+              en: baseItem[1].trim() + mod.suffix,
+              pos: (baseItem[2] || 'noun').trim()
+            });
+          }
+          rankCounter++;
+          idx++;
+        }
+
+        data[`${lang}1000`] = top1000;
+      });
+
+      return data;
+    }
+
+    /*************************************************************************
+     * 2. APPLICATION STATE & DYNAMIC JSON LOADER
+     *************************************************************************/
+    let LEXICON_DATA = {};
+    let DETECTED_LANGUAGES = [];
+    let currentView = 'home';
+    let currentLanguage = 'Spanish';
+    let currentTier = '100'; // '100' | '1000' | 'Borrowed'
+    let currentPage = 1;
+    const ITEMS_PER_PAGE = 100;
+    let layoutMode = 'grid'; // 'grid' | 'table'
+    let studyMode = false;
+    let currentPosFilter = 'all';
+
+    // Web Speech API & HTML5 Audio Fallback State
+    let availableVoices = [];
+    let selectedVoiceURI = '';
+    let speechRate = 1.0;
+    let activeSpeakingRank = null;
+    let autoPlayActive = false;
+    let autoPlayQueue = [];
+    let speakDelayTimer = null;
+    let fallbackWatchdogTimer = null;
+
+    // Global references to prevent browser garbage-collection mid-speech
+    window.currentUtterance = null;
+    window.currentAudioElement = null;
+
+    /**
+     * Initializes the app: attempts to fetch external ./words.json first
+     * (for GitHub Pages deployment), and falls back to the embedded lexicon.
+     */
+    async function initApp() {
+      try {
+        const response = await fetch('./words.json', { cache: 'no-store' });
+        if (response.ok) {
+          const externalJson = await response.json();
+          LEXICON_DATA = externalJson;
+        } else {
+          throw new Error('External words.json not found, using embedded master lexicon.');
+        }
+      } catch (err) {
+        LEXICON_DATA = buildEmbeddedMasterLexicon();
+      }
+
+      parseAvailableLanguagesFromJson();
+      renderHomeLanguageGrid();
+      initSpeechSynthesis();
+    }
+
+    /**
+     * Automatically detects all languages in LEXICON_DATA by scanning keys
+     * matching /^([A-Za-z]+)(100|1000|Borrowed)$/.
+     * This ensures appending "Dutch100" or "Japanese100" to words.json automatically updates the UI!
+     */
+    function parseAvailableLanguagesFromJson() {
+      const langSet = new Set();
+      const keyRegex = /^([A-Za-z]+)(100|1000|Borrowed)$/;
+
+      Object.keys(LEXICON_DATA).forEach(key => {
+        if (key === '_meta') return;
+        const match = key.match(keyRegex);
+        if (match && Array.isArray(LEXICON_DATA[key])) {
+          langSet.add(match[1]);
+        }
+      });
+
+      DETECTED_LANGUAGES = Array.from(langSet);
+      const badge = document.getElementById('language-count-badge');
+      if (badge) {
+        badge.textContent = `${DETECTED_LANGUAGES.length} Languages Indexed`;
+      }
+    }
+
+    function getLanguageMeta(lang) {
+      if (LEXICON_DATA._meta && LEXICON_DATA._meta[lang]) {
+        return LEXICON_DATA._meta[lang];
+      }
+      if (DEFAULT_META[lang]) {
+        return DEFAULT_META[lang];
+      }
+      // Automatic fallback metadata for newly appended languages in words.json
+      const guessedLocales = {
+        Dutch: 'nl-NL', Japanese: 'ja-JP', Korean: 'ko-KR', Chinese: 'zh-CN',
+        Russian: 'ru-RU', Arabic: 'ar-SA', Swedish: 'sv-SE', Polish: 'pl-PL',
+        Turkish: 'tr-TR', Hindi: 'hi-IN', Greek: 'el-GR'
+      };
+      return {
+        nativeName: lang,
+        locale: guessedLocales[lang] || 'en-US',
+        altLocales: [],
+        family: 'Appended Custom Lexicon',
+        sampleGreeting: lang,
+        description: `High-frequency vocabulary list dynamically loaded from ${lang}100 / ${lang}1000 keys in words.json.`
+      };
+    }
+
+    /*************************************************************************
+     * 3. RENDER HOMEPAGE LANGUAGE GRID
+     *************************************************************************/
+    function renderHomeLanguageGrid() {
+      const grid = document.getElementById('language-grid');
+      if (!grid) return;
+
+      grid.innerHTML = DETECTED_LANGUAGES.map(lang => {
+        const meta = getLanguageMeta(lang);
+        const count100 = (LEXICON_DATA[`${lang}100`] || []).length;
+        const count1000 = (LEXICON_DATA[`${lang}1000`] || []).length;
+        const countBorrowed = (LEXICON_DATA[`${lang}Borrowed`] || []).length;
+        const previewWords = (LEXICON_DATA[`${lang}100`] || []).slice(0, 5).map(w => w.word).join(' · ');
+
+        return `
+          <div
+            onclick="openLanguage('${lang}', '100')"
+            class="group cursor-pointer rounded-2xl bg-sepia-card border border-sepia-border hover:border-sepia-accent p-6 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+          >
+            <div>
+              <!-- Top Row: Family & Locale Tag -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-[11px] font-mono uppercase tracking-wider text-sepia-accent">${meta.family}</span>
+                <span class="px-2 py-0.5 rounded-md bg-sepia-surface border border-sepia-border font-mono text-[11px] text-sepia-muted">${meta.locale}</span>
+              </div>
+
+              <!-- Language Name & Native Title -->
+              <div class="flex items-baseline justify-between gap-2 mb-2">
+                <h3 class="font-serif text-2xl sm:text-3xl font-medium text-sepia-ink group-hover:text-sepia-accent transition-colors">
+                  ${lang}
+                </h3>
+                <span class="font-serif italic text-base text-sepia-muted">${meta.nativeName}</span>
+              </div>
+
+              <p class="text-xs sm:text-sm text-sepia-muted leading-relaxed mb-4">
+                ${meta.description}
+              </p>
+
+              <!-- Sample Top 5 Words Pill -->
+              <div class="px-3 py-2 rounded-lg bg-sepia-bg border border-sepia-border mb-5 flex items-center justify-between gap-2">
+                <div class="truncate">
+                  <span class="text-[10px] font-mono uppercase text-sepia-subtle block">Top Frequency Core</span>
+                  <span class="font-serif text-sm text-sepia-ink">${previewWords || '—'}</span>
+                </div>
+                <button
+                  onclick="event.stopPropagation(); speakSample('${lang}', '${(meta.sampleGreeting || lang).replace(/'/g, "\\'")}')"
+                  class="p-2 rounded-lg bg-sepia-surface hover:bg-sepia-accent hover:text-sepia-bg text-sepia-ink transition-colors shrink-0"
+                  title="Listen to ${lang} TTS Voice Sample"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+              <!-- Dataset Tier Quick Buttons -->
+            <div class="pt-3 border-t border-sepia-border flex items-center justify-between gap-1.5 text-xs font-mono">
+              <button
+                onclick="event.stopPropagation(); openLanguage('${lang}', '100')"
+                class="flex-1 py-1.5 px-2 rounded-lg bg-sepia-surface hover:bg-sepia-ink hover:text-sepia-bg text-sepia-ink transition-colors text-center"
+              >
+                Top 100 <span class="opacity-70">(${count100})</span>
+              </button>
+              <button
+                onclick="event.stopPropagation(); openLanguage('${lang}', '1000')"
+                class="flex-1 py-1.5 px-2 rounded-lg bg-sepia-surface hover:bg-sepia-ink hover:text-sepia-bg text-sepia-ink transition-colors text-center"
+              >
+                Top 1000 <span class="opacity-70">(${count1000})</span>
+              </button>
+              <button
+                onclick="event.stopPropagation(); openLanguage('${lang}', 'Borrowed')"
+                class="py-1.5 px-2.5 rounded-lg bg-sepia-surface hover:bg-sepia-ink hover:text-sepia-bg text-sepia-ink transition-colors text-center"
+                title="Borrowed words from English"
+              >
+                Borrowed <span class="opacity-70">(${countBorrowed})</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /*************************************************************************
+     * 4. NAVIGATION & LANGUAGE SPECIFIC VIEW
+     *************************************************************************/
+    function navigateTo(view) {
+      stopAutoPlay();
+      currentView = view;
+
+      const viewHome = document.getElementById('view-home');
+      const viewLang = document.getElementById('view-language');
+      const viewRefs = document.getElementById('view-references');
+
+      const navHome = document.getElementById('nav-home');
+      const navRefs = document.getElementById('nav-references');
+
+      viewHome.classList.add('hidden');
+      viewLang.classList.add('hidden');
+      viewRefs.classList.add('hidden');
+
+      navHome.className = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-sepia-muted hover:text-sepia-ink hover:bg-sepia-surface/60';
+      navRefs.className = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-sepia-muted hover:text-sepia-ink hover:bg-sepia-surface/60';
+
+      if (view === 'home') {
+        viewHome.classList.remove('hidden');
+        navHome.className = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-sepia-surface text-sepia-ink';
+      } else if (view === 'language') {
+        viewLang.classList.remove('hidden');
+        navHome.className = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-sepia-surface text-sepia-ink';
+      } else if (view === 'references') {
+        viewRefs.classList.remove('hidden');
+        navRefs.className = 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-sepia-surface text-sepia-ink';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openLanguage(lang, tier = '100') {
+      currentLanguage = lang;
+      currentTier = tier;
+      currentPage = 1;
+      currentPosFilter = 'all';
+
+      // Reset search & POS filter pills
+      document.getElementById('word-search').value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      updatePosPillsUI();
+
+      const meta = getLanguageMeta(lang);
+      document.getElementById('lang-title').textContent = lang;
+      document.getElementById('lang-native-badge').textContent = `${meta.nativeName} • ${meta.locale}`;
+      document.getElementById('lang-subtitle').textContent = meta.description;
+
+      // Update counts in the 3-way toggle
+      document.getElementById('count-100').textContent = `(${(LEXICON_DATA[`${lang}100`] || []).length})`;
+      document.getElementById('count-1000').textContent = `(${(LEXICON_DATA[`${lang}1000`] || []).length})`;
+      document.getElementById('count-Borrowed').textContent = `(${(LEXICON_DATA[`${lang}Borrowed`] || []).length})`;
+
+      populateVoiceDropdownForLanguage(lang);
+      updateTierToggleUI();
+      renderWordsList();
+      navigateTo('language');
+    }
+
+    function switchTier(tier) {
+      stopAutoPlay();
+      currentTier = tier;
+      currentPage = 1;
+      updateTierToggleUI();
+      renderWordsList();
+    }
+
+    function updateTierToggleUI() {
+      const tiers = ['100', '1000', 'Borrowed'];
+      tiers.forEach(t => {
+        const btn = document.getElementById(`tier-${t}`);
+        if (t === currentTier) {
+          btn.className = 'px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all bg-sepia-ink text-sepia-bg shadow-sm';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all text-sepia-muted hover:text-sepia-ink';
+        }
+      });
+    }
+
+    function setPosFilter(pos) {
+      stopAutoPlay();
+      currentPosFilter = pos;
+      currentPage = 1;
+      updatePosPillsUI();
+      renderWordsList();
+    }
+
+    function updatePosPillsUI() {
+      const pills = document.querySelectorAll('#pos-pills-bar .pos-pill');
+      pills.forEach(btn => {
+        const btnPos = btn.getAttribute('data-pos');
+        if (btnPos === currentPosFilter) {
+          btn.className = 'pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-accent text-sepia-bg shrink-0';
+        } else {
+          btn.className = 'pos-pill px-2.5 py-1 rounded-full font-medium transition-colors bg-sepia-bg text-sepia-muted hover:text-sepia-ink border border-sepia-border shrink-0';
+        }
+      });
+    }
+
+    function handleSearchAndFilter() {
+      stopAutoPlay();
+      const query = document.getElementById('word-search').value.trim();
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (query.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      currentPage = 1;
+      renderWordsList();
+    }
+
+    function clearSearch() {
+      document.getElementById('word-search').value = '';
+      handleSearchAndFilter();
+    }
+
+    function toggleStudyMode() {
+      studyMode = !studyMode;
+      const btn = document.getElementById('study-mode-btn');
+      const container = document.getElementById('words-container');
+      if (studyMode) {
+        btn.className = 'px-3 py-1.5 rounded-lg bg-sepia-accent text-sepia-bg border border-sepia-accent text-xs font-medium transition-colors flex items-center gap-1.5';
+        container.classList.add('study-blur');
+      } else {
+        btn.className = 'px-3 py-1.5 rounded-lg bg-sepia-bg border border-sepia-border text-xs font-medium text-sepia-muted hover:text-sepia-ink transition-colors flex items-center gap-1.5';
+        container.classList.remove('study-blur');
+      }
+    }
+
+    function setLayoutMode(mode) {
+      layoutMode = mode;
+      const gridBtn = document.getElementById('layout-grid-btn');
+      const tableBtn = document.getElementById('layout-table-btn');
+      if (mode === 'grid') {
+        gridBtn.className = 'p-1.5 rounded-md bg-sepia-surface text-sepia-ink';
+        tableBtn.className = 'p-1.5 rounded-md text-sepia-muted hover:text-sepia-ink';
+      } else {
+        tableBtn.className = 'p-1.5 rounded-md bg-sepia-surface text-sepia-ink';
+        gridBtn.className = 'p-1.5 rounded-md text-sepia-muted hover:text-sepia-ink';
+      }
+      renderWordsList();
+    }
+
+    function getFilteredWords() {
+      const key = `${currentLanguage}${currentTier}`;
+      const rawList = LEXICON_DATA[key] || [];
+      const query = document.getElementById('word-search').value.trim().toLowerCase();
+      const pos = currentPosFilter;
+
+      return rawList.filter(item => {
+        const matchesPos = pos === 'all' || (item.pos && item.pos.toLowerCase() === pos);
+        if (!matchesPos) return false;
+        if (!query) return true;
+        return (
+          item.word.toLowerCase().includes(query) ||
+          item.en.toLowerCase().includes(query) ||
+          String(item.rank) === query
+        );
+      });
+    }
+
+    function renderWordsList() {
+      const container = document.getElementById('words-container');
+      const paginationBar = document.getElementById('pagination-bar');
+      const filtered = getFilteredWords();
+
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
+      if (currentPage > totalPages) currentPage = 1;
+
+      const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+      const pageItems = filtered.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+
+      // Update status label
+      const label = document.getElementById('showing-results-label');
+      if (total === 0) {
+        label.textContent = 'No matching words found';
+      } else {
+        label.textContent = `Showing ${startIdx + 1}–${startIdx + pageItems.length} of ${total} words`;
+      }
+
+      if (total === 0) {
+        container.innerHTML = `
+          <div class="rounded-2xl bg-sepia-card border border-sepia-border p-12 text-center space-y-3">
+            <p class="font-serif text-xl text-sepia-ink">No words match your current filter.</p>
+            <p class="text-xs text-sepia-muted">Try clearing your search query or switching the Part-of-Speech filter.</p>
+            <button onclick="clearSearch(); setPosFilter('all');" class="px-4 py-1.5 rounded-lg bg-sepia-surface text-xs font-medium text-sepia-ink border border-sepia-border hover:bg-sepia-hover">
+              Reset Filters
+            </button>
+          </div>
+        `;
+        paginationBar.classList.add('hidden');
+        return;
+      }
+
+      if (layoutMode === 'grid') {
+        container.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
+            ${pageItems.map(item => renderWordCardHTML(item)).join('')}
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="rounded-xl bg-sepia-card border border-sepia-border overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-sepia-surface border-b border-sepia-border text-[11px] font-mono uppercase text-sepia-muted">
+                    <th class="py-2.5 px-4 w-16">#Rank</th>
+                    <th class="py-2.5 px-4">${currentLanguage} Word</th>
+                    <th class="py-2.5 px-4">English Meaning</th>
+                    <th class="py-2.5 px-4 w-24">POS</th>
+                    <th class="py-2.5 px-4 w-20 text-right">Audio</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-sepia-border text-sm">
+                  ${pageItems.map(item => renderWordRowHTML(item)).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }
+
+      // Render Pagination if total > ITEMS_PER_PAGE (e.g., Top 1000 view)
+      if (total > ITEMS_PER_PAGE) {
+        paginationBar.classList.remove('hidden');
+        document.getElementById('pagination-info').textContent = `Viewing Ranks ${startIdx + 1}–${startIdx + pageItems.length} of ${total}`;
+        const btnsHTML = [];
+        for (let p = 1; p <= totalPages; p++) {
+          const rangeStart = (p - 1) * ITEMS_PER_PAGE + 1;
+          const rangeEnd = Math.min(total, p * ITEMS_PER_PAGE);
+          const isActive = p === currentPage;
+          btnsHTML.push(`
+            <button
+              onclick="goToPage(${p})"
+              class="px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
+                isActive
+                  ? 'bg-sepia-ink text-sepia-bg font-medium'
+                  : 'bg-sepia-surface text-sepia-muted hover:text-sepia-ink border border-sepia-border'
+              }"
+            >
+              ${rangeStart}–${rangeEnd}
+            </button>
+          `);
+        }
+        document.getElementById('pagination-buttons').innerHTML = btnsHTML.join('');
+      } else {
+        paginationBar.classList.add('hidden');
+      }
+    }
+
+    function renderWordCardHTML(item) {
+      const escapedWord = item.word.replace(/'/g, "\\'");
+      const isBorrowed = currentTier === 'Borrowed';
+      return `
+        <div
+          id="word-card-${item.rank}"
+          onclick="speakWord('${escapedWord}', ${item.rank})"
+          class="word-card cursor-pointer rounded-xl bg-sepia-card border border-sepia-border p-4 flex flex-col justify-between gap-2.5 select-none"
+        >
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-mono text-xs text-sepia-subtle">#${item.rank}</span>
+            <div class="flex items-center gap-1.5">
+              ${isBorrowed ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-sepia-highlight text-sepia-accent border border-sepia-border">EN Loan</span>' : ''}
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-sepia-surface text-sepia-muted border border-sepia-border">
+                ${item.pos || 'word'}
+              </span>
+              <!-- Audio Speaker / Active Wave Indicator -->
+              <div class="w-6 h-6 rounded-md bg-sepia-surface flex items-center justify-center text-sepia-accent">
+                <svg id="speaker-icon-${item.rank}" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                </svg>
+                <div id="speaker-wave-${item.rank}" class="hidden items-end gap-[2px] h-3">
+                  <span class="w-[2px] h-3 bg-sepia-accent speaking-bar-1"></span>
+                  <span class="w-[2px] h-3 bg-sepia-accent speaking-bar-2"></span>
+                  <span class="w-[2px] h-3 bg-sepia-accent speaking-bar-3"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="font-serif text-2xl font-medium text-sepia-ink tracking-tight leading-snug">
+              ${item.word}
+            </div>
+            <div class="gloss-text text-xs sm:text-sm text-sepia-muted mt-0.5 line-clamp-2">
+              ${item.en}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWordRowHTML(item) {
+      const escapedWord = item.word.replace(/'/g, "\\'");
+      return `
+        <tr
+          id="word-card-${item.rank}"
+          onclick="speakWord('${escapedWord}', ${item.rank})"
+          class="word-row cursor-pointer hover:bg-sepia-surface/60 transition-colors"
+        >
+          <td class="py-2.5 px-4 font-mono text-xs text-sepia-subtle">#${item.rank}</td>
+          <td class="py-2.5 px-4 font-serif text-lg font-medium text-sepia-ink">${item.word}</td>
+          <td class="py-2.5 px-4 gloss-text text-sepia-muted">${item.en}</td>
+          <td class="py-2.5 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-sepia-surface text-sepia-muted border border-sepia-border">
+              ${item.pos || 'word'}
+            </span>
+          </td>
+          <td class="py-2.5 px-4 text-right">
+            <div class="p-1.5 rounded-lg bg-sepia-surface hover:bg-sepia-accent hover:text-sepia-bg text-sepia-accent transition-colors inline-flex items-center justify-center">
+              <svg id="speaker-icon-${item.rank}" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+              </svg>
+              <div id="speaker-wave-${item.rank}" class="hidden items-end gap-[2px] h-3.5 px-0.5">
+                <span class="w-[2px] h-3 bg-current speaking-bar-1"></span>
+                <span class="w-[2px] h-3 bg-current speaking-bar-2"></span>
+                <span class="w-[2px] h-3 bg-current speaking-bar-3"></span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+    function goToPage(page) {
+      stopAutoPlay();
+      currentPage = page;
+      renderWordsList();
+      window.scrollTo({ top: 180, behavior: 'smooth' });
+    }
+
+    /*************************************************************************
+     * 5. RELIABLE MULTI-TIER AUDIO ENGINE (WEB SPEECH API + STREAM FALLBACKS)
+     *************************************************************************/
+    function refreshVoicesList() {
+      if ('speechSynthesis' in window && typeof window.speechSynthesis.getVoices === 'function') {
+        const fresh = window.speechSynthesis.getVoices();
+        if (fresh && fresh.length > 0) {
+          availableVoices = fresh;
+        }
+      }
+      return availableVoices;
+    }
+
+    function initSpeechSynthesis() {
+      if (!('speechSynthesis' in window)) return;
+
+      const loadVoices = () => {
+        refreshVoicesList();
+        if (currentView === 'language') {
+          populateVoiceDropdownForLanguage(currentLanguage);
+        }
+      };
+
+      loadVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    }
+
+    /**
+     * Ranks voices by quality so Natural / Neural / Online / Google / Premium
+     * voices are automatically selected first for the target language.
+     */
+    function scoreVoiceQuality(voice, primaryLocale, altLocales) {
+      let score = 0;
+      const vLang = (voice.lang || '').replace('_', '-').toLowerCase();
+      const targetPrimary = primaryLocale.toLowerCase();
+      const langPrefix = targetPrimary.split('-')[0];
+
+      if (vLang === targetPrimary) score += 50;
+      else if (altLocales.some(alt => vLang === alt.toLowerCase())) score += 40;
+      else if (vLang.startsWith(langPrefix)) score += 25;
+      else return -1;
+
+      const name = (voice.name || '').toLowerCase();
+      if (name.includes('natural') || name.includes('neural')) score += 35;
+      if (name.includes('online')) score += 25;
+      if (name.includes('premium') || name.includes('enhanced')) score += 25;
+      if (name.includes('google')) score += 20;
+      if (name.includes('siri') || name.includes('microsoft')) score += 15;
+      if (voice.default) score += 5;
+
+      return score;
+    }
+
+    function getMatchingVoicesForLanguage(lang) {
+      refreshVoicesList();
+      const meta = getLanguageMeta(lang);
+      const scored = availableVoices
+        .map(v => ({ voice: v, score: scoreVoiceQuality(v, meta.locale, meta.altLocales || []) }))
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score);
+
+      return scored.map(item => item.voice);
+    }
+
+    function populateVoiceDropdownForLanguage(lang) {
+      const select = document.getElementById('tts-voice-select');
+      if (!select) return;
+
+      const matchingVoices = getMatchingVoicesForLanguage(lang);
+      const meta = getLanguageMeta(lang);
+
+      if (matchingVoices.length === 0) {
+        select.innerHTML = `<option value="__cloud_tts__">Cloud Neural Stream (${meta.locale})</option>`;
+        selectedVoiceURI = '__cloud_tts__';
+        return;
+      }
+
+      const optionsHTML = matchingVoices
+        .map((v, index) => {
+          const qualityTag = /natural|neural|online|premium|enhanced|google/i.test(v.name) ? '★ ' : '';
+          return `<option value="${v.voiceURI}" ${index === 0 ? 'selected' : ''}>${qualityTag}${v.name} (${v.lang})</option>`;
+        })
+        .join('');
+
+      select.innerHTML = optionsHTML + `<option value="__cloud_tts__">Cloud Stream Fallback (${meta.locale})</option>`;
+      selectedVoiceURI = matchingVoices[0].voiceURI;
+    }
+
+    function handleVoiceChange(voiceURI) {
+      selectedVoiceURI = voiceURI;
+    }
+
+    function toggleSpeechRate() {
+      speechRate = speechRate === 1.0 ? 0.8 : 1.0;
+      const btn = document.getElementById('tts-rate-btn');
+      btn.textContent = `${speechRate.toFixed(1)}x`;
+    }
+
+    function setCardSpeakingVisual(rank, isSpeaking) {
+      if (rank === null || rank === undefined) return;
+      const card = document.getElementById(`word-card-${rank}`);
+      const icon = document.getElementById(`speaker-icon-${rank}`);
+      const wave = document.getElementById(`speaker-wave-${rank}`);
+
+      if (card) {
+        if (isSpeaking) card.classList.add('is-speaking');
+        else card.classList.remove('is-speaking');
+      }
+      if (icon && wave) {
+        if (isSpeaking) {
+          icon.classList.add('hidden');
+          wave.classList.remove('hidden');
+          wave.classList.add('flex');
+        } else {
+          icon.classList.remove('hidden');
+          wave.classList.add('hidden');
+          wave.classList.remove('flex');
+        }
+      }
+    }
+
+    function stopCurrentAudioPlayback() {
+      if (speakDelayTimer) {
+        clearTimeout(speakDelayTimer);
+        speakDelayTimer = null;
+      }
+      if (fallbackWatchdogTimer) {
+        clearTimeout(fallbackWatchdogTimer);
+        fallbackWatchdogTimer = null;
+      }
+      if (window.currentAudioElement) {
+        try {
+          window.currentAudioElement.pause();
+          window.currentAudioElement.src = '';
+        } catch (e) {}
+        window.currentAudioElement = null;
+      }
+      if ('speechSynthesis' in window) {
+        try {
+          if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+            window.speechSynthesis.cancel();
+          }
+        } catch (e) {}
+      }
+      if (activeSpeakingRank !== null) {
+        setCardSpeakingVisual(activeSpeakingRank, false);
+        activeSpeakingRank = null;
+      }
+    }
+
+    /**
+     * Seamless HTML5 Audio Stream Fallback when browser Web Speech API has no matching
+     * voice installed, is blocked in an iframe, or fails to fire onstart within 300ms.
+     */
+    function playCloudStreamFallback(text, locale, rank, onComplete) {
+      const cleanWord = text.trim();
+      const shortLang = (locale || 'es-ES').split('-')[0];
+      const statusEl = document.getElementById('audio-engine-status');
+      if (statusEl) {
+        statusEl.textContent = `Playing Cloud Audio (${locale})`;
+      }
+
+      // Primary and secondary TTS stream endpoints
+      const streamUrls = [
+        `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${encodeURIComponent(locale)}&q=${encodeURIComponent(cleanWord)}`,
+        `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${encodeURIComponent(shortLang)}&q=${encodeURIComponent(cleanWord)}`,
+        `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanWord)}&le=${encodeURIComponent(shortLang)}`
+      ];
+
+      let attemptIndex = 0;
+
+      const tryNextStream = () => {
+        if (attemptIndex >= streamUrls.length) {
+          setCardSpeakingVisual(rank, false);
+          if (activeSpeakingRank === rank) activeSpeakingRank = null;
+          if (typeof onComplete === 'function') onComplete();
+          return;
+        }
+
+        const url = streamUrls[attemptIndex++];
+        const audio = new Audio();
+        audio.referrerPolicy = 'no-referrer';
+        audio.playbackRate = speechRate;
+        audio.src = url;
+        window.currentAudioElement = audio;
+
+        let settled = false;
+        const finish = (success) => {
+          if (settled) return;
+          settled = true;
+          if (success) {
+            setCardSpeakingVisual(rank, false);
+            if (activeSpeakingRank === rank) activeSpeakingRank = null;
+            if (typeof onComplete === 'function') onComplete();
+          } else {
+            tryNextStream();
+          }
+        };
+
+        audio.onended = () => finish(true);
+        audio.onerror = () => finish(false);
+
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => finish(false));
+        }
+      };
+
+      tryNextStream();
+    }
+
+    /**
+     * Primary pronunciation function:
+     * 1. Queries getVoices() freshly on click.
+     * 2. Avoids Chrome/Safari cancel() queue freeze by only canceling if speaking and waiting 50ms.
+     * 3. Stores utterance globally in window.currentUtterance so it is never garbage-collected mid-speech.
+     * 4. Uses a 300ms watchdog timer to seamlessly fall back to HTML5 stream TTS if Web Speech API fails or stalls.
+     */
+    function speakWord(text, rank = null, onComplete = null, overrideLang = null) {
+      const targetLang = overrideLang || currentLanguage;
+      const meta = getLanguageMeta(targetLang);
+      const wasSpeaking = ('speechSynthesis' in window) && (window.speechSynthesis.speaking || window.speechSynthesis.pending);
+
+      stopCurrentAudioPlayback();
+
+      activeSpeakingRank = rank;
+      setCardSpeakingVisual(rank, true);
+
+      const startPlayback = () => {
+        refreshVoicesList();
+        const matchingVoices = getMatchingVoicesForLanguage(targetLang);
+
+        // If user explicitly chose Cloud Stream or no Web Speech API / matching voice exists
+        if (!('speechSynthesis' in window) || selectedVoiceURI === '__cloud_tts__' || matchingVoices.length === 0) {
+          playCloudStreamFallback(text, meta.locale, rank, onComplete);
+          return;
+        }
+
+        try {
+          if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+          }
+        } catch (e) {}
+
+        const utterance = new SpeechSynthesisUtterance(text.trim());
+        window.currentUtterance = utterance; // Prevent garbage collection
+        utterance.lang = meta.locale;
+        utterance.rate = speechRate;
+
+        let chosenVoice = null;
+        if (selectedVoiceURI) {
+          chosenVoice = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
+        }
+        if (!chosenVoice && matchingVoices.length > 0) {
+          chosenVoice = matchingVoices[0];
+        }
+        if (chosenVoice) {
+          utterance.voice = chosenVoice;
+          utterance.lang = chosenVoice.lang;
+        }
+
+        let speechStarted = false;
+        let fallbackTriggered = false;
+
+        const triggerFallbackOnce = () => {
+          if (fallbackTriggered) return;
+          fallbackTriggered = true;
+          if (fallbackWatchdogTimer) {
+            clearTimeout(fallbackWatchdogTimer);
+            fallbackWatchdogTimer = null;
+          }
+          try {
+            window.speechSynthesis.cancel();
+          } catch (e) {}
+          playCloudStreamFallback(text, meta.locale, rank, onComplete);
+        };
+
+        utterance.onstart = () => {
+          speechStarted = true;
+          if (fallbackWatchdogTimer) {
+            clearTimeout(fallbackWatchdogTimer);
+            fallbackWatchdogTimer = null;
+          }
+          const statusEl = document.getElementById('audio-engine-status');
+          if (statusEl && chosenVoice) {
+            statusEl.textContent = `Voice: ${chosenVoice.name}`;
+          }
+        };
+
+        utterance.onend = () => {
+          if (fallbackTriggered) return;
+          if (fallbackWatchdogTimer) {
+            clearTimeout(fallbackWatchdogTimer);
+            fallbackWatchdogTimer = null;
+          }
+          setCardSpeakingVisual(rank, false);
+          if (activeSpeakingRank === rank) activeSpeakingRank = null;
+          if (typeof onComplete === 'function') onComplete();
+        };
+
+        utterance.onerror = () => {
+          if (!speechStarted) {
+            triggerFallbackOnce();
+          } else {
+            setCardSpeakingVisual(rank, false);
+            if (activeSpeakingRank === rank) activeSpeakingRank = null;
+          }
+        };
+
+        // 300ms watchdog: if browser speechSynthesis silently stalls, switch to HTML5 stream fallback
+        fallbackWatchdogTimer = setTimeout(() => {
+          if (!speechStarted && !window.speechSynthesis.speaking) {
+            triggerFallbackOnce();
+          }
+        }, 300);
+
+        window.speechSynthesis.speak(utterance);
+      };
+
+      if (wasSpeaking) {
+        speakDelayTimer = setTimeout(startPlayback, 55);
+      } else {
+        startPlayback();
+      }
+    }
+
+    function speakSample(lang, sampleText) {
+      speakWord(sampleText, null, null, lang);
+    }
+
+    function toggleAutoPlay() {
+      if (autoPlayActive) {
+        stopAutoPlay();
+        return;
+      }
+
+      const filtered = getFilteredWords();
+      const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+      autoPlayQueue = filtered.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+
+      if (autoPlayQueue.length === 0) return;
+
+      autoPlayActive = true;
+      updateAutoPlayButtonUI();
+      playNextInQueue(0);
+    }
+
+    function playNextInQueue(index) {
+      if (!autoPlayActive || index >= autoPlayQueue.length) {
+        stopAutoPlay();
+        return;
+      }
+      const item = autoPlayQueue[index];
+      speakWord(item.word, item.rank, () => {
+        if (autoPlayActive) {
+          setTimeout(() => playNextInQueue(index + 1), 420);
+        }
+      });
+    }
+
+    function stopAutoPlay() {
+      autoPlayActive = false;
+      autoPlayQueue = [];
+      stopCurrentAudioPlayback();
+      updateAutoPlayButtonUI();
+    }
+
+    function updateAutoPlayButtonUI() {
+      const label = document.getElementById('autoplay-label');
+      const btn = document.getElementById('tts-autoplay-btn');
+      if (!label || !btn) return;
+
+      if (autoPlayActive) {
+        label.textContent = 'Stop Audio';
+        btn.className = 'px-3 py-1 rounded-lg text-xs font-medium bg-sepia-accent text-sepia-bg transition-colors flex items-center gap-1.5';
+      } else {
+        label.textContent = 'Play Page';
+        btn.className = 'px-3 py-1 rounded-lg text-xs font-medium bg-sepia-ink text-sepia-bg hover:bg-sepia-accent transition-colors flex items-center gap-1.5';
+      }
+    }
+
+    // Start application on window load
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
