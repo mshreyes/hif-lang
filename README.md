@@ -1,4 +1,4 @@
-# HiF-Lang — High-Frequency Language Lexicon
+# HiF-Lang: High-Frequency Language Lexicon
 
 I created **HiF-Lang** because I wanted a clean, distraction-free way to learn the highest-frequency words across different languages as my very first step when advancing into a new language. 
 
